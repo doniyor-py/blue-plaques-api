@@ -1,5 +1,6 @@
 from flask import Flask, make_response, jsonify, request
 from pymongo import MongoClient
+from bson import ObjectId
 
 app = Flask(__name__)
 
@@ -16,7 +17,7 @@ def index():
 
 @app.route("/api/v1.0/plaques", methods=["GET"])
 def show_all_plaques():
-    # pagination: ?pn=page number, ?ps=page size
+
     page_num, page_size = 1, 10
     if request.args.get("pn"):
         page_num = int(request.args.get("pn"))
@@ -30,6 +31,20 @@ def show_all_plaques():
         data_to_return.append(plaque)
 
     return make_response(jsonify(data_to_return), 200)
+
+
+@app.route("/api/v1.0/plaques/<string:id>", methods=["GET"])
+def show_one_plaque(id):
+    if not ObjectId.is_valid(id):
+        return make_response(jsonify({"error": "Invalid plaque ID"}), 400)
+
+    plaque = plaques.find_one({"_id": ObjectId(id)})
+
+    if plaque is None:
+        return make_response(jsonify({"error": "Plaque not found"}), 404)
+
+    plaque["_id"] = str(plaque["_id"])
+    return make_response(jsonify(plaque), 200)
 
 
 if __name__ == "__main__":
