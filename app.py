@@ -25,7 +25,7 @@ def show_all_plaques():
     page_start = page_size * (page_num - 1)
 
     data_to_return = []
-    for plaque in plaques.find().skip(page_start).limit(page_size):
+    for plaque in plaques.find().sort("plaque_ref", 1).skip(page_start).limit(page_size):
         plaque["_id"] = str(plaque["_id"])
         data_to_return.append(plaque)
 

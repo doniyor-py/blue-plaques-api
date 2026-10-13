@@ -1,13 +1,9 @@
 """
 Blue Plaques Explorer - starter data generator.
 
-Like the dummyData.py from class, this creates test data and saves it to
-plaques.json. Each plaque is nested (plaque -> people -> roles / life_events,
-plaque -> visits -> ratings) so the API can do CRUD on sub-documents and
-MongoDB can calculate averages and totals.
 
-Later you can replace the fake plaques with the real Open Plaques London data,
-keeping the same structure.
+
+
 """
 import json
 import random
