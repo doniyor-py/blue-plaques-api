@@ -132,5 +132,18 @@ def edit_plaque(id):
     return make_response(jsonify({"url": edited_link}), 200)
 
 
+@app.route("/api/v1.0/plaques/<string:id>", methods=["DELETE"])
+def delete_plaque(id):
+    if not ObjectId.is_valid(id):
+        return make_response(jsonify({"error": "Invalid plaque ID"}), 400)
+
+    result = plaques.delete_one({"_id": ObjectId(id)})
+    if result.deleted_count == 0:
+        return make_response(jsonify({"error": "Plaque not found"}), 404)
+
+    return make_response(jsonify({}), 204)
+
+
+
 if __name__ == "__main__":
     app.run(debug=True, port=5001)
