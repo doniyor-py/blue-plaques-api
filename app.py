@@ -12,6 +12,8 @@ client = MongoClient("mongodb://localhost:27017")
 db = client.plaquesDB
 plaques = db.plaques
 
+# geo index: lets MongoDB search plaques by distance
+plaques.create_index([("location", "2dsphere")])
 
 def clean_plaque(plaque):
     """Turn every ObjectId in a plaque (its own _id and each visit _id) into text for JSON."""
@@ -271,6 +273,52 @@ def delete_visit(id, vid):
         return make_response(jsonify({"error": "Plaque or visit not found"}), 404)
 
     return make_response(jsonify({}), 204)
+
+
+
+# ===================== GEO =====================
+
+@app.route("/api/v1.0/plaques/nearby", methods=["GET"])
+def plaques_nearby():
+    try:
+        lat = float(request.args["lat"])
+        lng = float(request.args["lng"])
+    except (KeyError, ValueError):
+        return make_response(jsonify({"error": "lat and lng are required numbers, e.g. ?lat=51.53&lng=-0.12"}), 400)
+    if not (-90 <= lat <= 90) or not (-180 <= lng <= 180):
+        return make_response(jsonify({"error": "lat must be -90 to 90, lng must be -180 to 180"}), 400)
+
+    try:
+        radius = int(request.args.get("radius", 1000))
+        limit = int(request.args.get("limit", 10))
+    except ValueError:
+        return make_response(jsonify({"error": "radius and limit must be whole numbers"}), 400)
+    if radius < 1 or radius > 50000:
+        return make_response(jsonify({"error": "radius must be between 1 and 50000 metres"}), 400)
+    if limit < 1 or limit > 100:
+        return make_response(jsonify({"error": "limit must be between 1 and 100"}), 400)
+
+    pipeline = [
+        {"$geoNear": {
+            "near": {"type": "Point", "coordinates": [lng, lat]},
+            "distanceField": "distance_m",
+            "maxDistance": radius,
+            "spherical": True
+        }},
+        {"$limit": limit},
+        {"$project": {
+            "inscription": 1, "borough": 1, "colour": 1, "location": 1, "views": 1,
+            "distance_m": {"$round": ["$distance_m", 0]},
+            "walking_minutes": {"$ceil": {"$divide": ["$distance_m", 80]}}
+        }}
+    ]
+
+    data_to_return = []
+    for plaque in plaques.aggregate(pipeline):
+        plaque["_id"] = str(plaque["_id"])
+        data_to_return.append(plaque)
+
+    return make_response(jsonify(data_to_return), 200)
 
 
 if __name__ == "__main__":
