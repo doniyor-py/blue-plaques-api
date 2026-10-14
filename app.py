@@ -92,5 +92,45 @@ def add_plaque():
     return make_response(jsonify({"url": new_link}), 201)
 
 
+@app.route("/api/v1.0/plaques/<string:id>", methods=["PUT"])
+def edit_plaque(id):
+    if not ObjectId.is_valid(id):
+        return make_response(jsonify({"error": "Invalid plaque ID"}), 400)
+
+    changes = {}
+    for field in ["inscription", "colour", "organisation", "address", "borough"]:
+        if request.form.get(field):
+            changes[field] = request.form[field]
+
+    if request.form.get("erected_year"):
+        try:
+            erected_year = int(request.form["erected_year"])
+        except ValueError:
+            return make_response(jsonify({"error": "erected_year must be a whole number"}), 400)
+        if erected_year < 1800 or erected_year > 2026:
+            return make_response(jsonify({"error": "erected_year must be between 1800 and 2026"}), 400)
+        changes["erected_year"] = erected_year
+
+    if request.form.get("lat") or request.form.get("lng"):
+        try:
+            lat = float(request.form["lat"])
+            lng = float(request.form["lng"])
+        except (KeyError, ValueError):
+            return make_response(jsonify({"error": "Send both lat and lng as numbers"}), 400)
+        if not (-90 <= lat <= 90) or not (-180 <= lng <= 180):
+            return make_response(jsonify({"error": "lat must be -90 to 90, lng must be -180 to 180"}), 400)
+        changes["location"] = {"type": "Point", "coordinates": [lng, lat]}
+
+    if not changes:
+        return make_response(jsonify({"error": "No fields to update"}), 400)
+
+    result = plaques.update_one({"_id": ObjectId(id)}, {"$set": changes})
+    if result.matched_count == 0:
+        return make_response(jsonify({"error": "Plaque not found"}), 404)
+
+    edited_link = "http://127.0.0.1:5001/api/v1.0/plaques/" + id
+    return make_response(jsonify({"url": edited_link}), 200)
+
+
 if __name__ == "__main__":
     app.run(debug=True, port=5001)
