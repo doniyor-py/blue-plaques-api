@@ -1,5 +1,5 @@
 from flask import Flask, make_response, jsonify, request
-from pymongo import MongoClient
+from pymongo import MongoClient, ReturnDocument
 from flask_cors import CORS 
 from bson import ObjectId
 
@@ -40,7 +40,11 @@ def show_one_plaque(id):
     if not ObjectId.is_valid(id):
         return make_response(jsonify({"error": "Invalid plaque ID"}), 400)
 
-    plaque = plaques.find_one({"_id": ObjectId(id)})
+    plaque = plaques.find_one_and_update(
+        {"_id": ObjectId(id)},
+        {"$inc": {"views": 1}},
+        return_document=ReturnDocument.AFTER
+    )
 
     if plaque is None:
         return make_response(jsonify({"error": "Plaque not found"}), 404)
@@ -83,6 +87,7 @@ def add_plaque():
         "address": request.form["address"],
         "borough": request.form["borough"],
         "location": {"type": "Point", "coordinates": [lng, lat]},
+        "views": 0,
         "people": [],
         "photos": [],
         "visits": []
@@ -145,6 +150,15 @@ def delete_plaque(id):
 
     return make_response(jsonify({}), 204)
 
+
+
+@app.route("/api/v1.0/plaques/most-viewed", methods=["GET"])
+def most_viewed():
+    data_to_return = []
+    for plaque in plaques.find().sort("views", -1).limit(10):
+        plaque["_id"] = str(plaque["_id"])
+        data_to_return.append(plaque)
+    return make_response(jsonify(data_to_return), 200)
 
 
 if __name__ == "__main__":
