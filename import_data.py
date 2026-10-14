@@ -1,12 +1,16 @@
 """
 Blue Plaques Explorer - starter data generator.
 
+Each plaque is nested (plaque -> people -> roles / life_events,
+plaque -> visits -> ratings) so the API can do CRUD on sub-documents and
+MongoDB can calculate averages and totals.
 
-
-
+Later I will replace the fake plaques with the real Open Plaques London data,
+keeping the same structure.
 """
 import json
 import random
+from bson import ObjectId
 
 random.seed(661)  # same "random" data every time you run it
 
@@ -64,6 +68,7 @@ def make_person():
 
 def make_visit():
     return {
+        "_id": {"$oid": str(ObjectId())},   # each visit gets its own id
         "username": random.choice(USERNAMES),
         "date": f"2026-{random.randint(1, 9):02d}-{random.randint(1, 28):02d}",
         "note": random.choice(NOTES),
@@ -98,6 +103,7 @@ def generate_data(count=150):
                 "type": "Point",
                 "coordinates": [round(lng, 6), round(lat, 6)],
             },
+            "views": 0,
             "people": people,
             "photos": [{"url": f"https://example.com/plaques/{i + 1}.jpg",
                         "photographer": random.choice(USERNAMES)}],

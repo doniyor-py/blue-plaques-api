@@ -14,6 +14,7 @@
                 51.510868
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Emmeline Radcliffe",
@@ -55,6 +56,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac24c"
+                },
                 "username": "user7",
                 "date": "2026-05-14",
                 "note": "Lovely street",
@@ -65,6 +69,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac24d"
+                },
                 "username": "user2",
                 "date": "2026-02-17",
                 "note": "Great history",
@@ -75,6 +82,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac24e"
+                },
                 "username": "user1",
                 "date": "2026-09-24",
                 "note": "Worth the walk",
@@ -85,6 +95,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac24f"
+                },
                 "username": "user5",
                 "date": "2026-05-09",
                 "note": "Plaque needs cleaning",
@@ -111,6 +124,7 @@
                 51.456281
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Mary Marlowe",
@@ -179,6 +193,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac250"
+                },
                 "username": "user0",
                 "date": "2026-06-07",
                 "note": "Plaque needs cleaning",
@@ -189,6 +206,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac251"
+                },
                 "username": "user4",
                 "date": "2026-05-06",
                 "note": "Worth the walk",
@@ -199,6 +219,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac252"
+                },
                 "username": "user6",
                 "date": "2026-06-04",
                 "note": "Great history",
@@ -225,6 +248,7 @@
                 51.551822
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "William Pembroke",
@@ -303,6 +327,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac253"
+                },
                 "username": "user2",
                 "date": "2026-01-22",
                 "note": "Plaque needs cleaning",
@@ -313,6 +340,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac254"
+                },
                 "username": "user8",
                 "date": "2026-05-21",
                 "note": "Great history",
@@ -323,6 +353,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac255"
+                },
                 "username": "user6",
                 "date": "2026-06-27",
                 "note": "Worth the walk",
@@ -349,6 +382,7 @@
                 51.529344
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Ada Ellison",
@@ -387,6 +421,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac256"
+                },
                 "username": "user6",
                 "date": "2026-08-11",
                 "note": "Hidden behind a tree",
@@ -413,6 +450,7 @@
                 51.553151
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Thomas Fenwick",
@@ -454,6 +492,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac257"
+                },
                 "username": "user4",
                 "date": "2026-01-18",
                 "note": "Plaque needs cleaning",
@@ -464,6 +505,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac258"
+                },
                 "username": "user1",
                 "date": "2026-07-06",
                 "note": "Great history",
@@ -474,6 +518,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac259"
+                },
                 "username": "user0",
                 "date": "2026-05-11",
                 "note": "Worth the walk",
@@ -484,6 +531,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac25a"
+                },
                 "username": "user1",
                 "date": "2026-09-04",
                 "note": "Easy to find",
@@ -510,6 +560,7 @@
                 51.457197
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Samuel Ellison",
@@ -597,6 +648,7 @@
                 51.464932
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Samuel Langley",
@@ -634,6 +686,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac25b"
+                },
                 "username": "user1",
                 "date": "2026-05-15",
                 "note": "Worth the walk",
@@ -644,6 +699,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac25c"
+                },
                 "username": "user5",
                 "date": "2026-04-04",
                 "note": "Great history",
@@ -654,6 +712,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac25d"
+                },
                 "username": "user3",
                 "date": "2026-02-10",
                 "note": "Hidden behind a tree",
@@ -664,6 +725,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac25e"
+                },
                 "username": "user4",
                 "date": "2026-07-05",
                 "note": "Great history",
@@ -690,6 +754,7 @@
                 51.54335
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Ada Radcliffe",
@@ -775,6 +840,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac25f"
+                },
                 "username": "user6",
                 "date": "2026-02-27",
                 "note": "Great history",
@@ -785,6 +853,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac260"
+                },
                 "username": "user7",
                 "date": "2026-04-04",
                 "note": "Worth the walk",
@@ -795,6 +866,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac261"
+                },
                 "username": "user9",
                 "date": "2026-04-27",
                 "note": "Easy to find",
@@ -805,6 +879,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac262"
+                },
                 "username": "user6",
                 "date": "2026-08-26",
                 "note": "Lovely street",
@@ -831,6 +908,7 @@
                 51.490506
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Virginia Ashford",
@@ -909,6 +987,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac263"
+                },
                 "username": "user3",
                 "date": "2026-01-02",
                 "note": "Hidden behind a tree",
@@ -935,6 +1016,7 @@
                 51.459807
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Jane Pembroke",
@@ -1026,6 +1108,7 @@
                 51.463366
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "George Kingsley",
@@ -1101,6 +1184,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac264"
+                },
                 "username": "user6",
                 "date": "2026-08-03",
                 "note": "Lovely street",
@@ -1111,6 +1197,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac265"
+                },
                 "username": "user3",
                 "date": "2026-03-01",
                 "note": "Easy to find",
@@ -1121,6 +1210,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac266"
+                },
                 "username": "user7",
                 "date": "2026-03-10",
                 "note": "Lovely street",
@@ -1131,6 +1223,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac267"
+                },
                 "username": "user9",
                 "date": "2026-08-01",
                 "note": "Easy to find",
@@ -1157,6 +1252,7 @@
                 51.539995
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Emmeline Ashford",
@@ -1200,6 +1296,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac268"
+                },
                 "username": "user2",
                 "date": "2026-02-24",
                 "note": "Great history",
@@ -1210,6 +1309,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac269"
+                },
                 "username": "user6",
                 "date": "2026-02-26",
                 "note": "Easy to find",
@@ -1220,6 +1322,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac26a"
+                },
                 "username": "user9",
                 "date": "2026-07-05",
                 "note": "Great history",
@@ -1230,6 +1335,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac26b"
+                },
                 "username": "user5",
                 "date": "2026-07-10",
                 "note": "Hidden behind a tree",
@@ -1256,6 +1364,7 @@
                 51.503715
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Florence Ashford",
@@ -1302,6 +1411,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac26c"
+                },
                 "username": "user7",
                 "date": "2026-05-11",
                 "note": "Hidden behind a tree",
@@ -1312,6 +1424,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac26d"
+                },
                 "username": "user7",
                 "date": "2026-06-11",
                 "note": "Great history",
@@ -1322,6 +1437,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac26e"
+                },
                 "username": "user0",
                 "date": "2026-07-26",
                 "note": "Easy to find",
@@ -1332,6 +1450,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac26f"
+                },
                 "username": "user7",
                 "date": "2026-09-09",
                 "note": "Easy to find",
@@ -1342,6 +1463,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac270"
+                },
                 "username": "user3",
                 "date": "2026-09-07",
                 "note": "Great history",
@@ -1368,6 +1492,7 @@
                 51.511378
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "William Ashford",
@@ -1439,6 +1564,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac271"
+                },
                 "username": "user6",
                 "date": "2026-01-07",
                 "note": "Plaque needs cleaning",
@@ -1449,6 +1577,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac272"
+                },
                 "username": "user3",
                 "date": "2026-05-10",
                 "note": "Hidden behind a tree",
@@ -1475,6 +1606,7 @@
                 51.536338
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Isaac Ellison",
@@ -1513,6 +1645,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac273"
+                },
                 "username": "user6",
                 "date": "2026-03-02",
                 "note": "Great history",
@@ -1539,6 +1674,7 @@
                 51.456076
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "George Radcliffe",
@@ -1622,6 +1758,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac274"
+                },
                 "username": "user8",
                 "date": "2026-08-01",
                 "note": "Worth the walk",
@@ -1632,6 +1771,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac275"
+                },
                 "username": "user2",
                 "date": "2026-07-15",
                 "note": "Hidden behind a tree",
@@ -1642,6 +1784,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac276"
+                },
                 "username": "user7",
                 "date": "2026-03-26",
                 "note": "Great history",
@@ -1652,6 +1797,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac277"
+                },
                 "username": "user2",
                 "date": "2026-01-11",
                 "note": "Worth the walk",
@@ -1678,6 +1826,7 @@
                 51.464634
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "William Calloway",
@@ -1752,6 +1901,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac278"
+                },
                 "username": "user5",
                 "date": "2026-06-04",
                 "note": "Worth the walk",
@@ -1762,6 +1914,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac279"
+                },
                 "username": "user0",
                 "date": "2026-09-22",
                 "note": "Great history",
@@ -1772,6 +1927,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac27a"
+                },
                 "username": "user2",
                 "date": "2026-04-02",
                 "note": "Worth the walk",
@@ -1782,6 +1940,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac27b"
+                },
                 "username": "user0",
                 "date": "2026-04-07",
                 "note": "Hidden behind a tree",
@@ -1792,6 +1953,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac27c"
+                },
                 "username": "user7",
                 "date": "2026-02-25",
                 "note": "Plaque needs cleaning",
@@ -1818,6 +1982,7 @@
                 51.557291
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Emmeline Ashford",
@@ -1859,6 +2024,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac27d"
+                },
                 "username": "user3",
                 "date": "2026-04-03",
                 "note": "Hidden behind a tree",
@@ -1885,6 +2053,7 @@
                 51.540353
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Charles Whitmore",
@@ -1941,6 +2110,7 @@
                 51.500922
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "William Whitmore",
@@ -1982,6 +2152,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac27e"
+                },
                 "username": "user9",
                 "date": "2026-03-07",
                 "note": "Worth the walk",
@@ -1992,6 +2165,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac27f"
+                },
                 "username": "user8",
                 "date": "2026-02-11",
                 "note": "Hidden behind a tree",
@@ -2018,6 +2194,7 @@
                 51.490187
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "George Fenwick",
@@ -2054,6 +2231,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac280"
+                },
                 "username": "user9",
                 "date": "2026-02-22",
                 "note": "Hidden behind a tree",
@@ -2064,6 +2244,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac281"
+                },
                 "username": "user5",
                 "date": "2026-05-15",
                 "note": "Easy to find",
@@ -2074,6 +2257,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac282"
+                },
                 "username": "user2",
                 "date": "2026-04-03",
                 "note": "Easy to find",
@@ -2084,6 +2270,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac283"
+                },
                 "username": "user1",
                 "date": "2026-04-08",
                 "note": "Worth the walk",
@@ -2110,6 +2299,7 @@
                 51.532915
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "George Thornbury",
@@ -2153,6 +2343,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac284"
+                },
                 "username": "user1",
                 "date": "2026-06-15",
                 "note": "Easy to find",
@@ -2163,6 +2356,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac285"
+                },
                 "username": "user7",
                 "date": "2026-01-20",
                 "note": "Lovely street",
@@ -2173,6 +2369,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac286"
+                },
                 "username": "user5",
                 "date": "2026-04-10",
                 "note": "Great history",
@@ -2199,6 +2398,7 @@
                 51.53664
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Emmeline Marlowe",
@@ -2240,6 +2440,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac287"
+                },
                 "username": "user7",
                 "date": "2026-04-21",
                 "note": "Worth the walk",
@@ -2250,6 +2453,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac288"
+                },
                 "username": "user7",
                 "date": "2026-04-12",
                 "note": "Easy to find",
@@ -2260,6 +2466,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac289"
+                },
                 "username": "user2",
                 "date": "2026-07-09",
                 "note": "Worth the walk",
@@ -2286,6 +2495,7 @@
                 51.551831
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Samuel Langley",
@@ -2329,6 +2539,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac28a"
+                },
                 "username": "user9",
                 "date": "2026-04-09",
                 "note": "Great history",
@@ -2339,6 +2552,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac28b"
+                },
                 "username": "user8",
                 "date": "2026-09-25",
                 "note": "Lovely street",
@@ -2349,6 +2565,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac28c"
+                },
                 "username": "user2",
                 "date": "2026-07-09",
                 "note": "Worth the walk",
@@ -2375,6 +2594,7 @@
                 51.501703
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Emmeline Calloway",
@@ -2412,6 +2632,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac28d"
+                },
                 "username": "user4",
                 "date": "2026-02-03",
                 "note": "Great history",
@@ -2422,6 +2645,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac28e"
+                },
                 "username": "user5",
                 "date": "2026-06-03",
                 "note": "Easy to find",
@@ -2432,6 +2658,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac28f"
+                },
                 "username": "user9",
                 "date": "2026-03-15",
                 "note": "Plaque needs cleaning",
@@ -2442,6 +2671,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac290"
+                },
                 "username": "user2",
                 "date": "2026-04-26",
                 "note": "Plaque needs cleaning",
@@ -2468,6 +2700,7 @@
                 51.536924
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Florence Kingsley",
@@ -2546,6 +2779,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac291"
+                },
                 "username": "user9",
                 "date": "2026-07-12",
                 "note": "Plaque needs cleaning",
@@ -2556,6 +2792,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac292"
+                },
                 "username": "user9",
                 "date": "2026-01-18",
                 "note": "Lovely street",
@@ -2582,6 +2821,7 @@
                 51.464515
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Dorothy Fenwick",
@@ -2628,6 +2868,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac293"
+                },
                 "username": "user4",
                 "date": "2026-02-25",
                 "note": "Worth the walk",
@@ -2638,6 +2881,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac294"
+                },
                 "username": "user9",
                 "date": "2026-04-02",
                 "note": "Plaque needs cleaning",
@@ -2648,6 +2894,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac295"
+                },
                 "username": "user6",
                 "date": "2026-02-13",
                 "note": "Easy to find",
@@ -2658,6 +2907,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac296"
+                },
                 "username": "user2",
                 "date": "2026-08-15",
                 "note": "Plaque needs cleaning",
@@ -2668,6 +2920,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac297"
+                },
                 "username": "user8",
                 "date": "2026-02-22",
                 "note": "Lovely street",
@@ -2694,6 +2949,7 @@
                 51.493718
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Isaac Kingsley",
@@ -2742,6 +2998,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac298"
+                },
                 "username": "user0",
                 "date": "2026-07-08",
                 "note": "Lovely street",
@@ -2752,6 +3011,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac299"
+                },
                 "username": "user0",
                 "date": "2026-05-08",
                 "note": "Easy to find",
@@ -2762,6 +3024,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac29a"
+                },
                 "username": "user7",
                 "date": "2026-08-24",
                 "note": "Worth the walk",
@@ -2772,6 +3037,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac29b"
+                },
                 "username": "user9",
                 "date": "2026-03-19",
                 "note": "Hidden behind a tree",
@@ -2782,6 +3050,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac29c"
+                },
                 "username": "user4",
                 "date": "2026-09-25",
                 "note": "Worth the walk",
@@ -2808,6 +3079,7 @@
                 51.454233
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Jane Radcliffe",
@@ -2869,6 +3141,7 @@
                 51.495016
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Mary Fenwick",
@@ -2930,6 +3203,7 @@
                 51.4858
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Dorothy Marlowe",
@@ -2977,6 +3251,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac29d"
+                },
                 "username": "user7",
                 "date": "2026-03-22",
                 "note": "Lovely street",
@@ -2987,6 +3264,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac29e"
+                },
                 "username": "user3",
                 "date": "2026-02-15",
                 "note": "Worth the walk",
@@ -3013,6 +3293,7 @@
                 51.535607
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Emmeline Pembroke",
@@ -3050,6 +3331,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac29f"
+                },
                 "username": "user1",
                 "date": "2026-04-28",
                 "note": "Lovely street",
@@ -3060,6 +3344,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2a0"
+                },
                 "username": "user8",
                 "date": "2026-07-07",
                 "note": "Easy to find",
@@ -3070,6 +3357,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2a1"
+                },
                 "username": "user4",
                 "date": "2026-09-05",
                 "note": "Hidden behind a tree",
@@ -3096,6 +3386,7 @@
                 51.448893
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Samuel Hartley",
@@ -3149,6 +3440,7 @@
                 51.482374
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Ada Thornbury",
@@ -3191,6 +3483,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2a2"
+                },
                 "username": "user4",
                 "date": "2026-02-06",
                 "note": "Hidden behind a tree",
@@ -3201,6 +3496,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2a3"
+                },
                 "username": "user3",
                 "date": "2026-05-06",
                 "note": "Hidden behind a tree",
@@ -3211,6 +3509,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2a4"
+                },
                 "username": "user2",
                 "date": "2026-08-07",
                 "note": "Great history",
@@ -3237,6 +3538,7 @@
                 51.552993
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Thomas Thornbury",
@@ -3280,6 +3582,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2a5"
+                },
                 "username": "user1",
                 "date": "2026-06-27",
                 "note": "Worth the walk",
@@ -3290,6 +3595,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2a6"
+                },
                 "username": "user7",
                 "date": "2026-06-14",
                 "note": "Hidden behind a tree",
@@ -3300,6 +3608,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2a7"
+                },
                 "username": "user5",
                 "date": "2026-04-19",
                 "note": "Hidden behind a tree",
@@ -3326,6 +3637,7 @@
                 51.485581
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Jane Ellison",
@@ -3398,6 +3710,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2a8"
+                },
                 "username": "user0",
                 "date": "2026-05-05",
                 "note": "Worth the walk",
@@ -3408,6 +3723,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2a9"
+                },
                 "username": "user1",
                 "date": "2026-07-21",
                 "note": "Worth the walk",
@@ -3418,6 +3736,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2aa"
+                },
                 "username": "user7",
                 "date": "2026-07-24",
                 "note": "Worth the walk",
@@ -3428,6 +3749,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2ab"
+                },
                 "username": "user2",
                 "date": "2026-04-15",
                 "note": "Lovely street",
@@ -3454,6 +3778,7 @@
                 51.545409
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Samuel Fenwick",
@@ -3501,6 +3826,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2ac"
+                },
                 "username": "user2",
                 "date": "2026-04-26",
                 "note": "Lovely street",
@@ -3511,6 +3839,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2ad"
+                },
                 "username": "user8",
                 "date": "2026-04-18",
                 "note": "Great history",
@@ -3521,6 +3852,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2ae"
+                },
                 "username": "user6",
                 "date": "2026-03-16",
                 "note": "Plaque needs cleaning",
@@ -3531,6 +3865,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2af"
+                },
                 "username": "user1",
                 "date": "2026-04-16",
                 "note": "Hidden behind a tree",
@@ -3541,6 +3878,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2b0"
+                },
                 "username": "user3",
                 "date": "2026-09-03",
                 "note": "Lovely street",
@@ -3567,6 +3907,7 @@
                 51.533099
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "William Hartley",
@@ -3643,6 +3984,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2b1"
+                },
                 "username": "user2",
                 "date": "2026-08-27",
                 "note": "Plaque needs cleaning",
@@ -3653,6 +3997,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2b2"
+                },
                 "username": "user9",
                 "date": "2026-08-21",
                 "note": "Hidden behind a tree",
@@ -3663,6 +4010,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2b3"
+                },
                 "username": "user8",
                 "date": "2026-01-16",
                 "note": "Easy to find",
@@ -3673,6 +4023,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2b4"
+                },
                 "username": "user5",
                 "date": "2026-05-08",
                 "note": "Hidden behind a tree",
@@ -3699,6 +4052,7 @@
                 51.495377
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Ada Hartley",
@@ -3745,6 +4099,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2b5"
+                },
                 "username": "user0",
                 "date": "2026-02-25",
                 "note": "Easy to find",
@@ -3755,6 +4112,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2b6"
+                },
                 "username": "user9",
                 "date": "2026-01-01",
                 "note": "Worth the walk",
@@ -3781,6 +4141,7 @@
                 51.456321
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "William Calloway",
@@ -3829,6 +4190,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2b7"
+                },
                 "username": "user0",
                 "date": "2026-06-10",
                 "note": "Great history",
@@ -3839,6 +4203,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2b8"
+                },
                 "username": "user6",
                 "date": "2026-05-01",
                 "note": "Great history",
@@ -3865,6 +4232,7 @@
                 51.532553
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Samuel Whitmore",
@@ -3912,6 +4280,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2b9"
+                },
                 "username": "user8",
                 "date": "2026-02-19",
                 "note": "Worth the walk",
@@ -3922,6 +4293,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2ba"
+                },
                 "username": "user5",
                 "date": "2026-05-04",
                 "note": "Worth the walk",
@@ -3932,6 +4306,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2bb"
+                },
                 "username": "user5",
                 "date": "2026-01-08",
                 "note": "Lovely street",
@@ -3942,6 +4319,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2bc"
+                },
                 "username": "user5",
                 "date": "2026-07-09",
                 "note": "Plaque needs cleaning",
@@ -3968,6 +4348,7 @@
                 51.454984
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "George Ashford",
@@ -4036,6 +4417,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2bd"
+                },
                 "username": "user8",
                 "date": "2026-03-10",
                 "note": "Plaque needs cleaning",
@@ -4046,6 +4430,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2be"
+                },
                 "username": "user6",
                 "date": "2026-08-05",
                 "note": "Great history",
@@ -4072,6 +4459,7 @@
                 51.537846
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Florence Pembroke",
@@ -4129,6 +4517,7 @@
                 51.537018
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Dorothy Hartley",
@@ -4170,6 +4559,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2bf"
+                },
                 "username": "user5",
                 "date": "2026-06-10",
                 "note": "Plaque needs cleaning",
@@ -4196,6 +4588,7 @@
                 51.545528
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Ada Ashford",
@@ -4248,6 +4641,7 @@
                 51.50604
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "George Thornbury",
@@ -4317,6 +4711,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2c0"
+                },
                 "username": "user0",
                 "date": "2026-07-07",
                 "note": "Easy to find",
@@ -4343,6 +4740,7 @@
                 51.471331
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Thomas Hartley",
@@ -4384,6 +4782,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2c1"
+                },
                 "username": "user9",
                 "date": "2026-09-27",
                 "note": "Hidden behind a tree",
@@ -4394,6 +4795,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2c2"
+                },
                 "username": "user9",
                 "date": "2026-08-14",
                 "note": "Easy to find",
@@ -4404,6 +4808,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2c3"
+                },
                 "username": "user3",
                 "date": "2026-09-08",
                 "note": "Plaque needs cleaning",
@@ -4414,6 +4821,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2c4"
+                },
                 "username": "user9",
                 "date": "2026-08-18",
                 "note": "Worth the walk",
@@ -4440,6 +4850,7 @@
                 51.481235
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Edward Calloway",
@@ -4491,6 +4902,7 @@
                 51.496783
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Charles Hartley",
@@ -4562,6 +4974,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2c5"
+                },
                 "username": "user3",
                 "date": "2026-01-13",
                 "note": "Easy to find",
@@ -4572,6 +4987,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2c6"
+                },
                 "username": "user3",
                 "date": "2026-06-28",
                 "note": "Easy to find",
@@ -4582,6 +5000,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2c7"
+                },
                 "username": "user7",
                 "date": "2026-02-17",
                 "note": "Great history",
@@ -4592,6 +5013,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2c8"
+                },
                 "username": "user0",
                 "date": "2026-04-17",
                 "note": "Hidden behind a tree",
@@ -4602,6 +5026,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2c9"
+                },
                 "username": "user8",
                 "date": "2026-06-02",
                 "note": "Worth the walk",
@@ -4628,6 +5055,7 @@
                 51.548909
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Ada Hartley",
@@ -4704,6 +5132,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2ca"
+                },
                 "username": "user7",
                 "date": "2026-08-21",
                 "note": "Plaque needs cleaning",
@@ -4714,6 +5145,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2cb"
+                },
                 "username": "user8",
                 "date": "2026-05-28",
                 "note": "Easy to find",
@@ -4740,6 +5174,7 @@
                 51.462317
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Isaac Ellison",
@@ -4793,6 +5228,7 @@
                 51.49523
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Ada Hartley",
@@ -4866,6 +5302,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2cc"
+                },
                 "username": "user3",
                 "date": "2026-06-28",
                 "note": "Worth the walk",
@@ -4876,6 +5315,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2cd"
+                },
                 "username": "user5",
                 "date": "2026-02-21",
                 "note": "Worth the walk",
@@ -4886,6 +5328,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2ce"
+                },
                 "username": "user8",
                 "date": "2026-08-02",
                 "note": "Worth the walk",
@@ -4896,6 +5341,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2cf"
+                },
                 "username": "user0",
                 "date": "2026-07-03",
                 "note": "Lovely street",
@@ -4922,6 +5370,7 @@
                 51.54573
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Virginia Fenwick",
@@ -4970,6 +5419,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2d0"
+                },
                 "username": "user3",
                 "date": "2026-04-17",
                 "note": "Worth the walk",
@@ -4980,6 +5432,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2d1"
+                },
                 "username": "user3",
                 "date": "2026-03-07",
                 "note": "Lovely street",
@@ -4990,6 +5445,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2d2"
+                },
                 "username": "user1",
                 "date": "2026-07-21",
                 "note": "Lovely street",
@@ -5000,6 +5458,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2d3"
+                },
                 "username": "user0",
                 "date": "2026-01-13",
                 "note": "Great history",
@@ -5026,6 +5487,7 @@
                 51.455868
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Emmeline Radcliffe",
@@ -5072,6 +5534,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2d4"
+                },
                 "username": "user2",
                 "date": "2026-09-14",
                 "note": "Easy to find",
@@ -5082,6 +5547,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2d5"
+                },
                 "username": "user2",
                 "date": "2026-06-10",
                 "note": "Great history",
@@ -5092,6 +5560,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2d6"
+                },
                 "username": "user8",
                 "date": "2026-09-23",
                 "note": "Worth the walk",
@@ -5102,6 +5573,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2d7"
+                },
                 "username": "user4",
                 "date": "2026-04-15",
                 "note": "Lovely street",
@@ -5112,6 +5586,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2d8"
+                },
                 "username": "user8",
                 "date": "2026-02-25",
                 "note": "Plaque needs cleaning",
@@ -5138,6 +5615,7 @@
                 51.554953
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "George Calloway",
@@ -5174,6 +5652,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2d9"
+                },
                 "username": "user9",
                 "date": "2026-01-27",
                 "note": "Easy to find",
@@ -5184,6 +5665,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2da"
+                },
                 "username": "user6",
                 "date": "2026-08-24",
                 "note": "Easy to find",
@@ -5210,6 +5694,7 @@
                 51.537181
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Mary Langley",
@@ -5248,6 +5733,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2db"
+                },
                 "username": "user6",
                 "date": "2026-07-15",
                 "note": "Easy to find",
@@ -5258,6 +5746,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2dc"
+                },
                 "username": "user7",
                 "date": "2026-04-17",
                 "note": "Hidden behind a tree",
@@ -5268,6 +5759,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2dd"
+                },
                 "username": "user6",
                 "date": "2026-05-28",
                 "note": "Worth the walk",
@@ -5278,6 +5772,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2de"
+                },
                 "username": "user8",
                 "date": "2026-09-03",
                 "note": "Lovely street",
@@ -5304,6 +5801,7 @@
                 51.531852
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Samuel Ellison",
@@ -5340,6 +5838,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2df"
+                },
                 "username": "user5",
                 "date": "2026-07-14",
                 "note": "Easy to find",
@@ -5366,6 +5867,7 @@
                 51.468059
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Ada Ellison",
@@ -5433,6 +5935,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2e0"
+                },
                 "username": "user8",
                 "date": "2026-05-18",
                 "note": "Plaque needs cleaning",
@@ -5443,6 +5948,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2e1"
+                },
                 "username": "user9",
                 "date": "2026-03-22",
                 "note": "Easy to find",
@@ -5469,6 +5977,7 @@
                 51.545585
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Jane Fenwick",
@@ -5516,6 +6025,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2e2"
+                },
                 "username": "user6",
                 "date": "2026-03-23",
                 "note": "Easy to find",
@@ -5526,6 +6038,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2e3"
+                },
                 "username": "user2",
                 "date": "2026-03-07",
                 "note": "Worth the walk",
@@ -5536,6 +6051,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2e4"
+                },
                 "username": "user7",
                 "date": "2026-01-08",
                 "note": "Hidden behind a tree",
@@ -5546,6 +6064,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2e5"
+                },
                 "username": "user4",
                 "date": "2026-01-15",
                 "note": "Great history",
@@ -5556,6 +6077,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2e6"
+                },
                 "username": "user6",
                 "date": "2026-06-28",
                 "note": "Worth the walk",
@@ -5582,6 +6106,7 @@
                 51.53572
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Mary Marlowe",
@@ -5619,6 +6144,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2e7"
+                },
                 "username": "user0",
                 "date": "2026-08-25",
                 "note": "Hidden behind a tree",
@@ -5629,6 +6157,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2e8"
+                },
                 "username": "user3",
                 "date": "2026-06-04",
                 "note": "Easy to find",
@@ -5639,6 +6170,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2e9"
+                },
                 "username": "user1",
                 "date": "2026-05-06",
                 "note": "Great history",
@@ -5649,6 +6183,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2ea"
+                },
                 "username": "user5",
                 "date": "2026-01-12",
                 "note": "Easy to find",
@@ -5675,6 +6212,7 @@
                 51.486287
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Emmeline Kingsley",
@@ -5738,6 +6276,7 @@
                 51.453373
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Florence Kingsley",
@@ -5785,6 +6324,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2eb"
+                },
                 "username": "user2",
                 "date": "2026-05-17",
                 "note": "Great history",
@@ -5811,6 +6353,7 @@
                 51.554279
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Isaac Radcliffe",
@@ -5854,6 +6397,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2ec"
+                },
                 "username": "user4",
                 "date": "2026-09-15",
                 "note": "Hidden behind a tree",
@@ -5864,6 +6410,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2ed"
+                },
                 "username": "user6",
                 "date": "2026-04-10",
                 "note": "Lovely street",
@@ -5890,6 +6439,7 @@
                 51.487114
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Isaac Langley",
@@ -5961,6 +6511,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2ee"
+                },
                 "username": "user9",
                 "date": "2026-06-10",
                 "note": "Plaque needs cleaning",
@@ -5971,6 +6524,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2ef"
+                },
                 "username": "user7",
                 "date": "2026-08-13",
                 "note": "Worth the walk",
@@ -5981,6 +6537,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2f0"
+                },
                 "username": "user4",
                 "date": "2026-03-13",
                 "note": "Hidden behind a tree",
@@ -5991,6 +6550,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2f1"
+                },
                 "username": "user8",
                 "date": "2026-08-03",
                 "note": "Hidden behind a tree",
@@ -6017,6 +6579,7 @@
                 51.507355
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Virginia Calloway",
@@ -6064,6 +6627,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2f2"
+                },
                 "username": "user0",
                 "date": "2026-01-16",
                 "note": "Plaque needs cleaning",
@@ -6090,6 +6656,7 @@
                 51.453091
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Florence Ashford",
@@ -6146,6 +6713,7 @@
                 51.554898
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Charles Hartley",
@@ -6184,6 +6752,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2f3"
+                },
                 "username": "user0",
                 "date": "2026-05-15",
                 "note": "Plaque needs cleaning",
@@ -6194,6 +6765,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2f4"
+                },
                 "username": "user6",
                 "date": "2026-03-01",
                 "note": "Great history",
@@ -6204,6 +6778,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2f5"
+                },
                 "username": "user5",
                 "date": "2026-05-28",
                 "note": "Great history",
@@ -6214,6 +6791,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2f6"
+                },
                 "username": "user4",
                 "date": "2026-02-09",
                 "note": "Plaque needs cleaning",
@@ -6240,6 +6820,7 @@
                 51.550174
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "George Kingsley",
@@ -6286,6 +6867,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2f7"
+                },
                 "username": "user6",
                 "date": "2026-07-15",
                 "note": "Great history",
@@ -6296,6 +6880,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2f8"
+                },
                 "username": "user3",
                 "date": "2026-02-08",
                 "note": "Worth the walk",
@@ -6306,6 +6893,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2f9"
+                },
                 "username": "user5",
                 "date": "2026-01-09",
                 "note": "Plaque needs cleaning",
@@ -6316,6 +6906,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2fa"
+                },
                 "username": "user5",
                 "date": "2026-07-22",
                 "note": "Hidden behind a tree",
@@ -6326,6 +6919,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2fb"
+                },
                 "username": "user1",
                 "date": "2026-05-18",
                 "note": "Worth the walk",
@@ -6352,6 +6948,7 @@
                 51.541785
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Dorothy Kingsley",
@@ -6420,6 +7017,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2fc"
+                },
                 "username": "user7",
                 "date": "2026-01-08",
                 "note": "Great history",
@@ -6430,6 +7030,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2fd"
+                },
                 "username": "user5",
                 "date": "2026-01-24",
                 "note": "Worth the walk",
@@ -6440,6 +7043,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2fe"
+                },
                 "username": "user3",
                 "date": "2026-09-02",
                 "note": "Plaque needs cleaning",
@@ -6466,6 +7072,7 @@
                 51.540497
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Charles Kingsley",
@@ -6507,6 +7114,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac2ff"
+                },
                 "username": "user8",
                 "date": "2026-07-11",
                 "note": "Worth the walk",
@@ -6517,6 +7127,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac300"
+                },
                 "username": "user8",
                 "date": "2026-05-06",
                 "note": "Great history",
@@ -6527,6 +7140,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac301"
+                },
                 "username": "user5",
                 "date": "2026-02-24",
                 "note": "Easy to find",
@@ -6537,6 +7153,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac302"
+                },
                 "username": "user6",
                 "date": "2026-01-16",
                 "note": "Great history",
@@ -6547,6 +7166,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac303"
+                },
                 "username": "user7",
                 "date": "2026-05-28",
                 "note": "Great history",
@@ -6573,6 +7195,7 @@
                 51.462078
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Virginia Marlowe",
@@ -6611,6 +7234,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac304"
+                },
                 "username": "user4",
                 "date": "2026-07-27",
                 "note": "Easy to find",
@@ -6637,6 +7263,7 @@
                 51.465993
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Mary Thornbury",
@@ -6675,6 +7302,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac305"
+                },
                 "username": "user7",
                 "date": "2026-08-14",
                 "note": "Easy to find",
@@ -6685,6 +7315,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac306"
+                },
                 "username": "user4",
                 "date": "2026-04-04",
                 "note": "Hidden behind a tree",
@@ -6695,6 +7328,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac307"
+                },
                 "username": "user9",
                 "date": "2026-05-05",
                 "note": "Worth the walk",
@@ -6721,6 +7357,7 @@
                 51.492867
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Mary Marlowe",
@@ -6768,6 +7405,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac308"
+                },
                 "username": "user5",
                 "date": "2026-03-05",
                 "note": "Plaque needs cleaning",
@@ -6778,6 +7418,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac309"
+                },
                 "username": "user2",
                 "date": "2026-02-21",
                 "note": "Easy to find",
@@ -6788,6 +7431,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac30a"
+                },
                 "username": "user1",
                 "date": "2026-04-26",
                 "note": "Easy to find",
@@ -6798,6 +7444,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac30b"
+                },
                 "username": "user8",
                 "date": "2026-07-03",
                 "note": "Worth the walk",
@@ -6808,6 +7457,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac30c"
+                },
                 "username": "user0",
                 "date": "2026-09-04",
                 "note": "Great history",
@@ -6834,6 +7486,7 @@
                 51.546549
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Thomas Pembroke",
@@ -6887,6 +7540,7 @@
                 51.487377
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Florence Marlowe",
@@ -6972,6 +7626,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac30d"
+                },
                 "username": "user3",
                 "date": "2026-08-09",
                 "note": "Great history",
@@ -6998,6 +7655,7 @@
                 51.549451
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Samuel Thornbury",
@@ -7036,6 +7694,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac30e"
+                },
                 "username": "user9",
                 "date": "2026-05-20",
                 "note": "Easy to find",
@@ -7046,6 +7707,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac30f"
+                },
                 "username": "user1",
                 "date": "2026-03-10",
                 "note": "Great history",
@@ -7056,6 +7720,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac310"
+                },
                 "username": "user4",
                 "date": "2026-02-12",
                 "note": "Great history",
@@ -7066,6 +7733,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac311"
+                },
                 "username": "user5",
                 "date": "2026-08-05",
                 "note": "Worth the walk",
@@ -7076,6 +7746,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac312"
+                },
                 "username": "user5",
                 "date": "2026-09-07",
                 "note": "Worth the walk",
@@ -7102,6 +7775,7 @@
                 51.535158
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Ada Pembroke",
@@ -7144,6 +7818,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac313"
+                },
                 "username": "user4",
                 "date": "2026-04-01",
                 "note": "Worth the walk",
@@ -7154,6 +7831,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac314"
+                },
                 "username": "user8",
                 "date": "2026-04-17",
                 "note": "Worth the walk",
@@ -7164,6 +7844,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac315"
+                },
                 "username": "user6",
                 "date": "2026-04-08",
                 "note": "Great history",
@@ -7190,6 +7873,7 @@
                 51.493348
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Emmeline Ellison",
@@ -7236,6 +7920,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac316"
+                },
                 "username": "user0",
                 "date": "2026-01-18",
                 "note": "Easy to find",
@@ -7246,6 +7933,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac317"
+                },
                 "username": "user2",
                 "date": "2026-02-11",
                 "note": "Lovely street",
@@ -7256,6 +7946,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac318"
+                },
                 "username": "user8",
                 "date": "2026-06-05",
                 "note": "Plaque needs cleaning",
@@ -7266,6 +7959,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac319"
+                },
                 "username": "user1",
                 "date": "2026-08-09",
                 "note": "Worth the walk",
@@ -7292,6 +7988,7 @@
                 51.491934
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Thomas Whitmore",
@@ -7329,6 +8026,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac31a"
+                },
                 "username": "user7",
                 "date": "2026-01-02",
                 "note": "Lovely street",
@@ -7339,6 +8039,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac31b"
+                },
                 "username": "user7",
                 "date": "2026-09-23",
                 "note": "Easy to find",
@@ -7349,6 +8052,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac31c"
+                },
                 "username": "user5",
                 "date": "2026-05-26",
                 "note": "Worth the walk",
@@ -7375,6 +8081,7 @@
                 51.462103
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Dorothy Calloway",
@@ -7469,6 +8176,7 @@
                 51.540464
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Virginia Whitmore",
@@ -7510,6 +8218,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac31d"
+                },
                 "username": "user2",
                 "date": "2026-05-03",
                 "note": "Great history",
@@ -7536,6 +8247,7 @@
                 51.453869
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Virginia Calloway",
@@ -7584,6 +8296,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac31e"
+                },
                 "username": "user9",
                 "date": "2026-05-07",
                 "note": "Lovely street",
@@ -7594,6 +8309,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac31f"
+                },
                 "username": "user3",
                 "date": "2026-05-16",
                 "note": "Plaque needs cleaning",
@@ -7604,6 +8322,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac320"
+                },
                 "username": "user2",
                 "date": "2026-06-08",
                 "note": "Lovely street",
@@ -7614,6 +8335,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac321"
+                },
                 "username": "user5",
                 "date": "2026-04-22",
                 "note": "Worth the walk",
@@ -7624,6 +8348,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac322"
+                },
                 "username": "user1",
                 "date": "2026-06-21",
                 "note": "Great history",
@@ -7650,6 +8377,7 @@
                 51.498406
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Charles Calloway",
@@ -7724,6 +8452,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac323"
+                },
                 "username": "user9",
                 "date": "2026-05-25",
                 "note": "Lovely street",
@@ -7734,6 +8465,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac324"
+                },
                 "username": "user1",
                 "date": "2026-08-10",
                 "note": "Hidden behind a tree",
@@ -7744,6 +8478,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac325"
+                },
                 "username": "user7",
                 "date": "2026-07-21",
                 "note": "Hidden behind a tree",
@@ -7754,6 +8491,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac326"
+                },
                 "username": "user0",
                 "date": "2026-03-23",
                 "note": "Easy to find",
@@ -7764,6 +8504,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac327"
+                },
                 "username": "user7",
                 "date": "2026-04-20",
                 "note": "Lovely street",
@@ -7790,6 +8533,7 @@
                 51.508158
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Emmeline Ellison",
@@ -7860,6 +8604,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac328"
+                },
                 "username": "user0",
                 "date": "2026-05-01",
                 "note": "Easy to find",
@@ -7870,6 +8617,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac329"
+                },
                 "username": "user2",
                 "date": "2026-02-02",
                 "note": "Great history",
@@ -7880,6 +8630,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac32a"
+                },
                 "username": "user5",
                 "date": "2026-03-13",
                 "note": "Hidden behind a tree",
@@ -7890,6 +8643,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac32b"
+                },
                 "username": "user8",
                 "date": "2026-04-11",
                 "note": "Lovely street",
@@ -7900,6 +8656,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac32c"
+                },
                 "username": "user6",
                 "date": "2026-02-21",
                 "note": "Easy to find",
@@ -7926,6 +8685,7 @@
                 51.552128
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "George Marlowe",
@@ -7964,6 +8724,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac32d"
+                },
                 "username": "user1",
                 "date": "2026-03-12",
                 "note": "Worth the walk",
@@ -7974,6 +8737,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac32e"
+                },
                 "username": "user2",
                 "date": "2026-01-10",
                 "note": "Lovely street",
@@ -8000,6 +8766,7 @@
                 51.505469
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Samuel Kingsley",
@@ -8078,6 +8845,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac32f"
+                },
                 "username": "user2",
                 "date": "2026-05-03",
                 "note": "Easy to find",
@@ -8088,6 +8858,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac330"
+                },
                 "username": "user4",
                 "date": "2026-09-25",
                 "note": "Worth the walk",
@@ -8098,6 +8871,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac331"
+                },
                 "username": "user1",
                 "date": "2026-08-16",
                 "note": "Great history",
@@ -8108,6 +8884,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac332"
+                },
                 "username": "user9",
                 "date": "2026-01-24",
                 "note": "Great history",
@@ -8118,6 +8897,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac333"
+                },
                 "username": "user5",
                 "date": "2026-06-01",
                 "note": "Great history",
@@ -8144,6 +8926,7 @@
                 51.496492
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Mary Ellison",
@@ -8191,6 +8974,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac334"
+                },
                 "username": "user8",
                 "date": "2026-01-22",
                 "note": "Worth the walk",
@@ -8201,6 +8987,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac335"
+                },
                 "username": "user0",
                 "date": "2026-06-13",
                 "note": "Lovely street",
@@ -8227,6 +9016,7 @@
                 51.506825
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Thomas Thornbury",
@@ -8307,6 +9097,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac336"
+                },
                 "username": "user0",
                 "date": "2026-01-14",
                 "note": "Lovely street",
@@ -8317,6 +9110,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac337"
+                },
                 "username": "user9",
                 "date": "2026-06-28",
                 "note": "Lovely street",
@@ -8343,6 +9139,7 @@
                 51.493079
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Isaac Radcliffe",
@@ -8390,6 +9187,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac338"
+                },
                 "username": "user1",
                 "date": "2026-01-21",
                 "note": "Hidden behind a tree",
@@ -8400,6 +9200,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac339"
+                },
                 "username": "user6",
                 "date": "2026-09-09",
                 "note": "Plaque needs cleaning",
@@ -8410,6 +9213,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac33a"
+                },
                 "username": "user2",
                 "date": "2026-04-05",
                 "note": "Lovely street",
@@ -8420,6 +9226,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac33b"
+                },
                 "username": "user2",
                 "date": "2026-09-28",
                 "note": "Great history",
@@ -8430,6 +9239,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac33c"
+                },
                 "username": "user8",
                 "date": "2026-03-16",
                 "note": "Worth the walk",
@@ -8456,6 +9268,7 @@
                 51.538894
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Thomas Pembroke",
@@ -8523,6 +9336,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac33d"
+                },
                 "username": "user2",
                 "date": "2026-05-10",
                 "note": "Hidden behind a tree",
@@ -8533,6 +9349,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac33e"
+                },
                 "username": "user1",
                 "date": "2026-03-25",
                 "note": "Hidden behind a tree",
@@ -8559,6 +9378,7 @@
                 51.528632
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Florence Hartley",
@@ -8606,6 +9426,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac33f"
+                },
                 "username": "user1",
                 "date": "2026-09-05",
                 "note": "Great history",
@@ -8632,6 +9455,7 @@
                 51.551208
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Virginia Langley",
@@ -8670,6 +9494,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac340"
+                },
                 "username": "user6",
                 "date": "2026-01-22",
                 "note": "Lovely street",
@@ -8680,6 +9507,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac341"
+                },
                 "username": "user9",
                 "date": "2026-07-07",
                 "note": "Lovely street",
@@ -8690,6 +9520,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac342"
+                },
                 "username": "user8",
                 "date": "2026-03-18",
                 "note": "Worth the walk",
@@ -8716,6 +9549,7 @@
                 51.500277
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Thomas Kingsley",
@@ -8759,6 +9593,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac343"
+                },
                 "username": "user5",
                 "date": "2026-01-12",
                 "note": "Great history",
@@ -8785,6 +9622,7 @@
                 51.495308
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "George Kingsley",
@@ -8831,6 +9669,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac344"
+                },
                 "username": "user7",
                 "date": "2026-05-21",
                 "note": "Lovely street",
@@ -8841,6 +9682,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac345"
+                },
                 "username": "user7",
                 "date": "2026-05-04",
                 "note": "Great history",
@@ -8851,6 +9695,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac346"
+                },
                 "username": "user5",
                 "date": "2026-08-16",
                 "note": "Plaque needs cleaning",
@@ -8861,6 +9708,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac347"
+                },
                 "username": "user9",
                 "date": "2026-04-24",
                 "note": "Worth the walk",
@@ -8887,6 +9737,7 @@
                 51.505406
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Jane Thornbury",
@@ -8957,6 +9808,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac348"
+                },
                 "username": "user2",
                 "date": "2026-02-04",
                 "note": "Plaque needs cleaning",
@@ -8967,6 +9821,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac349"
+                },
                 "username": "user5",
                 "date": "2026-09-10",
                 "note": "Lovely street",
@@ -8977,6 +9834,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac34a"
+                },
                 "username": "user3",
                 "date": "2026-05-22",
                 "note": "Worth the walk",
@@ -8987,6 +9847,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac34b"
+                },
                 "username": "user7",
                 "date": "2026-09-16",
                 "note": "Lovely street",
@@ -8997,6 +9860,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac34c"
+                },
                 "username": "user3",
                 "date": "2026-02-18",
                 "note": "Plaque needs cleaning",
@@ -9023,6 +9889,7 @@
                 51.533156
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Jane Thornbury",
@@ -9061,6 +9928,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac34d"
+                },
                 "username": "user5",
                 "date": "2026-04-10",
                 "note": "Lovely street",
@@ -9071,6 +9941,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac34e"
+                },
                 "username": "user2",
                 "date": "2026-04-06",
                 "note": "Easy to find",
@@ -9081,6 +9954,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac34f"
+                },
                 "username": "user7",
                 "date": "2026-09-28",
                 "note": "Plaque needs cleaning",
@@ -9107,6 +9983,7 @@
                 51.465244
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "William Fenwick",
@@ -9160,6 +10037,7 @@
                 51.49744
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Emmeline Ellison",
@@ -9197,6 +10075,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac350"
+                },
                 "username": "user9",
                 "date": "2026-04-14",
                 "note": "Easy to find",
@@ -9223,6 +10104,7 @@
                 51.544071
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Emmeline Marlowe",
@@ -9281,6 +10163,7 @@
                 51.504351
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Emmeline Whitmore",
@@ -9329,6 +10212,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac351"
+                },
                 "username": "user9",
                 "date": "2026-05-10",
                 "note": "Lovely street",
@@ -9339,6 +10225,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac352"
+                },
                 "username": "user7",
                 "date": "2026-09-17",
                 "note": "Great history",
@@ -9349,6 +10238,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac353"
+                },
                 "username": "user3",
                 "date": "2026-06-16",
                 "note": "Hidden behind a tree",
@@ -9359,6 +10251,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac354"
+                },
                 "username": "user1",
                 "date": "2026-02-26",
                 "note": "Great history",
@@ -9369,6 +10264,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac355"
+                },
                 "username": "user4",
                 "date": "2026-02-28",
                 "note": "Great history",
@@ -9395,6 +10293,7 @@
                 51.503749
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "George Hartley",
@@ -9437,6 +10336,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac356"
+                },
                 "username": "user5",
                 "date": "2026-07-05",
                 "note": "Lovely street",
@@ -9447,6 +10349,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac357"
+                },
                 "username": "user1",
                 "date": "2026-01-19",
                 "note": "Easy to find",
@@ -9457,6 +10362,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac358"
+                },
                 "username": "user8",
                 "date": "2026-03-09",
                 "note": "Easy to find",
@@ -9483,6 +10391,7 @@
                 51.540307
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Edward Whitmore",
@@ -9526,6 +10435,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac359"
+                },
                 "username": "user0",
                 "date": "2026-07-20",
                 "note": "Easy to find",
@@ -9552,6 +10464,7 @@
                 51.529479
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "William Fenwick",
@@ -9599,6 +10512,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac35a"
+                },
                 "username": "user8",
                 "date": "2026-09-09",
                 "note": "Lovely street",
@@ -9625,6 +10541,7 @@
                 51.55138
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Virginia Ashford",
@@ -9683,6 +10600,7 @@
                 51.506482
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Charles Langley",
@@ -9768,6 +10686,7 @@
                 51.467122
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Virginia Kingsley",
@@ -9831,6 +10750,7 @@
                 51.487459
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Dorothy Hartley",
@@ -9867,6 +10787,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac35b"
+                },
                 "username": "user8",
                 "date": "2026-08-06",
                 "note": "Hidden behind a tree",
@@ -9893,6 +10816,7 @@
                 51.534782
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Thomas Fenwick",
@@ -9935,6 +10859,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac35c"
+                },
                 "username": "user8",
                 "date": "2026-05-18",
                 "note": "Great history",
@@ -9945,6 +10872,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac35d"
+                },
                 "username": "user8",
                 "date": "2026-08-09",
                 "note": "Easy to find",
@@ -9971,6 +10901,7 @@
                 51.46539
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Ada Hartley",
@@ -10046,6 +10977,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac35e"
+                },
                 "username": "user7",
                 "date": "2026-05-09",
                 "note": "Easy to find",
@@ -10056,6 +10990,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac35f"
+                },
                 "username": "user4",
                 "date": "2026-01-25",
                 "note": "Lovely street",
@@ -10066,6 +11003,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac360"
+                },
                 "username": "user9",
                 "date": "2026-08-22",
                 "note": "Hidden behind a tree",
@@ -10076,6 +11016,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac361"
+                },
                 "username": "user9",
                 "date": "2026-06-26",
                 "note": "Easy to find",
@@ -10102,6 +11045,7 @@
                 51.465856
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Thomas Kingsley",
@@ -10143,6 +11087,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac362"
+                },
                 "username": "user3",
                 "date": "2026-08-04",
                 "note": "Worth the walk",
@@ -10153,6 +11100,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac363"
+                },
                 "username": "user9",
                 "date": "2026-08-09",
                 "note": "Easy to find",
@@ -10179,6 +11129,7 @@
                 51.471371
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Virginia Ellison",
@@ -10237,6 +11188,7 @@
                 51.547754
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Virginia Pembroke",
@@ -10333,6 +11285,7 @@
                 51.481179
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Emmeline Radcliffe",
@@ -10394,6 +11347,7 @@
                 51.496017
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Isaac Fenwick",
@@ -10474,6 +11428,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac364"
+                },
                 "username": "user0",
                 "date": "2026-07-19",
                 "note": "Plaque needs cleaning",
@@ -10484,6 +11441,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac365"
+                },
                 "username": "user2",
                 "date": "2026-04-16",
                 "note": "Easy to find",
@@ -10510,6 +11470,7 @@
                 51.458358
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Thomas Ashford",
@@ -10573,6 +11534,7 @@
                 51.549561
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Dorothy Ellison",
@@ -10611,6 +11573,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac366"
+                },
                 "username": "user1",
                 "date": "2026-07-15",
                 "note": "Hidden behind a tree",
@@ -10637,6 +11602,7 @@
                 51.548254
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Dorothy Pembroke",
@@ -10674,6 +11640,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac367"
+                },
                 "username": "user4",
                 "date": "2026-01-22",
                 "note": "Great history",
@@ -10684,6 +11653,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac368"
+                },
                 "username": "user0",
                 "date": "2026-07-20",
                 "note": "Easy to find",
@@ -10694,6 +11666,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac369"
+                },
                 "username": "user7",
                 "date": "2026-08-21",
                 "note": "Hidden behind a tree",
@@ -10704,6 +11679,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac36a"
+                },
                 "username": "user3",
                 "date": "2026-03-06",
                 "note": "Hidden behind a tree",
@@ -10714,6 +11692,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac36b"
+                },
                 "username": "user6",
                 "date": "2026-09-09",
                 "note": "Great history",
@@ -10740,6 +11721,7 @@
                 51.54748
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "George Pembroke",
@@ -10808,6 +11790,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac36c"
+                },
                 "username": "user4",
                 "date": "2026-04-03",
                 "note": "Worth the walk",
@@ -10834,6 +11819,7 @@
                 51.538626
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Ada Hartley",
@@ -10891,6 +11877,7 @@
                 51.471479
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Virginia Langley",
@@ -10955,6 +11942,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac36d"
+                },
                 "username": "user9",
                 "date": "2026-07-17",
                 "note": "Hidden behind a tree",
@@ -10965,6 +11955,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac36e"
+                },
                 "username": "user6",
                 "date": "2026-07-07",
                 "note": "Easy to find",
@@ -10975,6 +11968,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac36f"
+                },
                 "username": "user0",
                 "date": "2026-09-08",
                 "note": "Plaque needs cleaning",
@@ -10985,6 +11981,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac370"
+                },
                 "username": "user3",
                 "date": "2026-06-28",
                 "note": "Great history",
@@ -11011,6 +12010,7 @@
                 51.501011
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Isaac Radcliffe",
@@ -11080,6 +12080,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac371"
+                },
                 "username": "user3",
                 "date": "2026-06-14",
                 "note": "Worth the walk",
@@ -11090,6 +12093,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac372"
+                },
                 "username": "user1",
                 "date": "2026-08-04",
                 "note": "Easy to find",
@@ -11100,6 +12106,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac373"
+                },
                 "username": "user2",
                 "date": "2026-03-28",
                 "note": "Hidden behind a tree",
@@ -11110,6 +12119,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac374"
+                },
                 "username": "user8",
                 "date": "2026-03-08",
                 "note": "Easy to find",
@@ -11136,6 +12148,7 @@
                 51.472423
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Florence Langley",
@@ -11210,6 +12223,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac375"
+                },
                 "username": "user7",
                 "date": "2026-02-02",
                 "note": "Great history",
@@ -11220,6 +12236,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac376"
+                },
                 "username": "user8",
                 "date": "2026-07-05",
                 "note": "Lovely street",
@@ -11246,6 +12265,7 @@
                 51.538501
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Charles Kingsley",
@@ -11284,6 +12304,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac377"
+                },
                 "username": "user8",
                 "date": "2026-03-22",
                 "note": "Great history",
@@ -11294,6 +12317,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac378"
+                },
                 "username": "user2",
                 "date": "2026-04-23",
                 "note": "Hidden behind a tree",
@@ -11304,6 +12330,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac379"
+                },
                 "username": "user2",
                 "date": "2026-03-26",
                 "note": "Plaque needs cleaning",
@@ -11314,6 +12343,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac37a"
+                },
                 "username": "user8",
                 "date": "2026-06-08",
                 "note": "Plaque needs cleaning",
@@ -11324,6 +12356,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac37b"
+                },
                 "username": "user5",
                 "date": "2026-04-19",
                 "note": "Easy to find",
@@ -11350,6 +12385,7 @@
                 51.545194
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Ada Whitmore",
@@ -11392,6 +12428,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac37c"
+                },
                 "username": "user8",
                 "date": "2026-05-22",
                 "note": "Worth the walk",
@@ -11402,6 +12441,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac37d"
+                },
                 "username": "user9",
                 "date": "2026-06-22",
                 "note": "Hidden behind a tree",
@@ -11412,6 +12454,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac37e"
+                },
                 "username": "user7",
                 "date": "2026-09-16",
                 "note": "Worth the walk",
@@ -11422,6 +12467,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac37f"
+                },
                 "username": "user6",
                 "date": "2026-03-28",
                 "note": "Worth the walk",
@@ -11448,6 +12496,7 @@
                 51.450709
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Charles Ashford",
@@ -11495,6 +12544,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac380"
+                },
                 "username": "user2",
                 "date": "2026-05-09",
                 "note": "Plaque needs cleaning",
@@ -11505,6 +12557,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac381"
+                },
                 "username": "user8",
                 "date": "2026-08-24",
                 "note": "Easy to find",
@@ -11531,6 +12586,7 @@
                 51.460555
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Isaac Calloway",
@@ -11569,6 +12625,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac382"
+                },
                 "username": "user8",
                 "date": "2026-04-15",
                 "note": "Easy to find",
@@ -11579,6 +12638,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac383"
+                },
                 "username": "user9",
                 "date": "2026-02-14",
                 "note": "Lovely street",
@@ -11605,6 +12667,7 @@
                 51.453364
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Mary Marlowe",
@@ -11679,6 +12742,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac384"
+                },
                 "username": "user7",
                 "date": "2026-08-25",
                 "note": "Plaque needs cleaning",
@@ -11705,6 +12771,7 @@
                 51.456423
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Charles Whitmore",
@@ -11742,6 +12809,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac385"
+                },
                 "username": "user3",
                 "date": "2026-07-11",
                 "note": "Hidden behind a tree",
@@ -11752,6 +12822,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac386"
+                },
                 "username": "user6",
                 "date": "2026-03-05",
                 "note": "Great history",
@@ -11762,6 +12835,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac387"
+                },
                 "username": "user7",
                 "date": "2026-09-26",
                 "note": "Worth the walk",
@@ -11788,6 +12864,7 @@
                 51.464826
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Thomas Kingsley",
@@ -11825,6 +12902,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac388"
+                },
                 "username": "user8",
                 "date": "2026-04-13",
                 "note": "Great history",
@@ -11835,6 +12915,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac389"
+                },
                 "username": "user4",
                 "date": "2026-08-17",
                 "note": "Easy to find",
@@ -11845,6 +12928,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac38a"
+                },
                 "username": "user2",
                 "date": "2026-06-13",
                 "note": "Hidden behind a tree",
@@ -11855,6 +12941,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac38b"
+                },
                 "username": "user1",
                 "date": "2026-07-12",
                 "note": "Worth the walk",
@@ -11865,6 +12954,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac38c"
+                },
                 "username": "user8",
                 "date": "2026-04-08",
                 "note": "Worth the walk",
@@ -11891,6 +12983,7 @@
                 51.540134
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Virginia Thornbury",
@@ -11965,6 +13058,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac38d"
+                },
                 "username": "user9",
                 "date": "2026-01-20",
                 "note": "Great history",
@@ -11991,6 +13087,7 @@
                 51.486726
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Ada Pembroke",
@@ -12039,6 +13136,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac38e"
+                },
                 "username": "user9",
                 "date": "2026-01-02",
                 "note": "Great history",
@@ -12049,6 +13149,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac38f"
+                },
                 "username": "user4",
                 "date": "2026-05-26",
                 "note": "Lovely street",
@@ -12059,6 +13162,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac390"
+                },
                 "username": "user7",
                 "date": "2026-04-11",
                 "note": "Lovely street",
@@ -12085,6 +13191,7 @@
                 51.550029
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Mary Calloway",
@@ -12123,6 +13230,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac391"
+                },
                 "username": "user7",
                 "date": "2026-06-28",
                 "note": "Hidden behind a tree",
@@ -12133,6 +13243,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac392"
+                },
                 "username": "user2",
                 "date": "2026-09-19",
                 "note": "Plaque needs cleaning",
@@ -12143,6 +13256,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac393"
+                },
                 "username": "user2",
                 "date": "2026-05-22",
                 "note": "Great history",
@@ -12153,6 +13269,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac394"
+                },
                 "username": "user5",
                 "date": "2026-09-16",
                 "note": "Plaque needs cleaning",
@@ -12179,6 +13298,7 @@
                 51.461766
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Jane Marlowe",
@@ -12236,6 +13356,7 @@
                 51.544888
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Mary Hartley",
@@ -12274,6 +13395,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac395"
+                },
                 "username": "user7",
                 "date": "2026-09-06",
                 "note": "Plaque needs cleaning",
@@ -12284,6 +13408,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac396"
+                },
                 "username": "user7",
                 "date": "2026-08-12",
                 "note": "Great history",
@@ -12310,6 +13437,7 @@
                 51.497316
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Mary Thornbury",
@@ -12351,6 +13479,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac397"
+                },
                 "username": "user2",
                 "date": "2026-07-27",
                 "note": "Great history",
@@ -12361,6 +13492,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac398"
+                },
                 "username": "user0",
                 "date": "2026-04-11",
                 "note": "Easy to find",
@@ -12387,6 +13521,7 @@
                 51.553977
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Mary Thornbury",
@@ -12456,6 +13591,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac399"
+                },
                 "username": "user7",
                 "date": "2026-04-15",
                 "note": "Hidden behind a tree",
@@ -12466,6 +13604,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac39a"
+                },
                 "username": "user1",
                 "date": "2026-07-19",
                 "note": "Hidden behind a tree",
@@ -12476,6 +13617,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac39b"
+                },
                 "username": "user3",
                 "date": "2026-01-06",
                 "note": "Lovely street",
@@ -12502,6 +13646,7 @@
                 51.545335
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Jane Radcliffe",
@@ -12549,6 +13694,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac39c"
+                },
                 "username": "user2",
                 "date": "2026-02-06",
                 "note": "Hidden behind a tree",
@@ -12559,6 +13707,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac39d"
+                },
                 "username": "user6",
                 "date": "2026-09-10",
                 "note": "Worth the walk",
@@ -12569,6 +13720,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac39e"
+                },
                 "username": "user4",
                 "date": "2026-09-20",
                 "note": "Great history",
@@ -12579,6 +13733,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac39f"
+                },
                 "username": "user9",
                 "date": "2026-08-21",
                 "note": "Plaque needs cleaning",
@@ -12605,6 +13762,7 @@
                 51.500541
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Florence Kingsley",
@@ -12646,6 +13804,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac3a0"
+                },
                 "username": "user8",
                 "date": "2026-09-13",
                 "note": "Lovely street",
@@ -12656,6 +13817,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac3a1"
+                },
                 "username": "user6",
                 "date": "2026-05-10",
                 "note": "Great history",
@@ -12666,6 +13830,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac3a2"
+                },
                 "username": "user8",
                 "date": "2026-05-04",
                 "note": "Hidden behind a tree",
@@ -12676,6 +13843,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac3a3"
+                },
                 "username": "user4",
                 "date": "2026-08-27",
                 "note": "Plaque needs cleaning",
@@ -12686,6 +13856,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac3a4"
+                },
                 "username": "user6",
                 "date": "2026-03-28",
                 "note": "Lovely street",
@@ -12712,6 +13885,7 @@
                 51.477687
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "William Whitmore",
@@ -12748,6 +13922,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac3a5"
+                },
                 "username": "user3",
                 "date": "2026-07-04",
                 "note": "Easy to find",
@@ -12758,6 +13935,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac3a6"
+                },
                 "username": "user7",
                 "date": "2026-04-18",
                 "note": "Easy to find",
@@ -12768,6 +13948,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac3a7"
+                },
                 "username": "user5",
                 "date": "2026-08-05",
                 "note": "Hidden behind a tree",
@@ -12794,6 +13977,7 @@
                 51.50417
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Mary Langley",
@@ -12865,6 +14049,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac3a8"
+                },
                 "username": "user3",
                 "date": "2026-08-14",
                 "note": "Great history",
@@ -12891,6 +14078,7 @@
                 51.55308
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "George Marlowe",
@@ -12932,6 +14120,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac3a9"
+                },
                 "username": "user1",
                 "date": "2026-04-26",
                 "note": "Worth the walk",
@@ -12942,6 +14133,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac3aa"
+                },
                 "username": "user4",
                 "date": "2026-05-14",
                 "note": "Hidden behind a tree",
@@ -12952,6 +14146,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac3ab"
+                },
                 "username": "user4",
                 "date": "2026-06-19",
                 "note": "Easy to find",
@@ -12978,6 +14175,7 @@
                 51.556576
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Thomas Langley",
@@ -13051,6 +14249,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac3ac"
+                },
                 "username": "user3",
                 "date": "2026-05-15",
                 "note": "Lovely street",
@@ -13061,6 +14262,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac3ad"
+                },
                 "username": "user9",
                 "date": "2026-09-12",
                 "note": "Great history",
@@ -13071,6 +14275,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac3ae"
+                },
                 "username": "user2",
                 "date": "2026-02-16",
                 "note": "Easy to find",
@@ -13081,6 +14288,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac3af"
+                },
                 "username": "user4",
                 "date": "2026-03-05",
                 "note": "Lovely street",
@@ -13091,6 +14301,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac3b0"
+                },
                 "username": "user1",
                 "date": "2026-08-15",
                 "note": "Great history",
@@ -13117,6 +14330,7 @@
                 51.555698
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Mary Calloway",
@@ -13165,6 +14379,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac3b1"
+                },
                 "username": "user9",
                 "date": "2026-01-28",
                 "note": "Great history",
@@ -13175,6 +14392,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac3b2"
+                },
                 "username": "user3",
                 "date": "2026-01-02",
                 "note": "Great history",
@@ -13185,6 +14405,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac3b3"
+                },
                 "username": "user9",
                 "date": "2026-07-20",
                 "note": "Easy to find",
@@ -13211,6 +14434,7 @@
                 51.547285
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Edward Ashford",
@@ -13263,6 +14487,7 @@
                 51.542079
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Isaac Pembroke",
@@ -13299,6 +14524,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac3b4"
+                },
                 "username": "user1",
                 "date": "2026-02-18",
                 "note": "Lovely street",
@@ -13325,6 +14553,7 @@
                 51.451009
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Jane Marlowe",
@@ -13388,6 +14617,7 @@
                 51.511429
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Dorothy Fenwick",
@@ -13426,6 +14656,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac3b5"
+                },
                 "username": "user3",
                 "date": "2026-03-07",
                 "note": "Worth the walk",
@@ -13436,6 +14669,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac3b6"
+                },
                 "username": "user7",
                 "date": "2026-02-27",
                 "note": "Hidden behind a tree",
@@ -13462,6 +14698,7 @@
                 51.452807
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "George Marlowe",
@@ -13503,6 +14740,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac3b7"
+                },
                 "username": "user4",
                 "date": "2026-03-18",
                 "note": "Worth the walk",
@@ -13513,6 +14753,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac3b8"
+                },
                 "username": "user2",
                 "date": "2026-08-14",
                 "note": "Worth the walk",
@@ -13523,6 +14766,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac3b9"
+                },
                 "username": "user5",
                 "date": "2026-05-13",
                 "note": "Great history",
@@ -13533,6 +14779,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac3ba"
+                },
                 "username": "user9",
                 "date": "2026-08-24",
                 "note": "Great history",
@@ -13559,6 +14808,7 @@
                 51.487982
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Charles Fenwick",
@@ -13602,6 +14852,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac3bb"
+                },
                 "username": "user8",
                 "date": "2026-01-15",
                 "note": "Great history",
@@ -13612,6 +14865,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac3bc"
+                },
                 "username": "user6",
                 "date": "2026-08-09",
                 "note": "Worth the walk",
@@ -13638,6 +14894,7 @@
                 51.539293
             ]
         },
+        "views": 0,
         "people": [
             {
                 "name": "Charles Hartley",
@@ -13718,6 +14975,9 @@
         ],
         "visits": [
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac3bd"
+                },
                 "username": "user7",
                 "date": "2026-02-22",
                 "note": "Easy to find",
@@ -13728,6 +14988,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac3be"
+                },
                 "username": "user9",
                 "date": "2026-08-17",
                 "note": "Hidden behind a tree",
@@ -13738,6 +15001,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac3bf"
+                },
                 "username": "user4",
                 "date": "2026-01-23",
                 "note": "Easy to find",
@@ -13748,6 +15014,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac3c0"
+                },
                 "username": "user9",
                 "date": "2026-01-10",
                 "note": "Worth the walk",
@@ -13758,6 +15027,9 @@
                 }
             },
             {
+                "_id": {
+                    "$oid": "6acf7acad7815cd632cac3c1"
+                },
                 "username": "user8",
                 "date": "2026-06-03",
                 "note": "Great history",
