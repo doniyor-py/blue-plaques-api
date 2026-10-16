@@ -497,5 +497,108 @@ def delete_visit(id, vid):
     return make_response(jsonify({}), 204)
 
 
+# ===================== ANALYTICS =====================
+@app.route("/api/v1.0/analytics/boroughs", methods=["GET"])
+def borough_stats():
+    pipeline = [
+        {"$group": {
+            "_id": "$borough",
+            "plaques": {"$sum": 1},
+            "total_views": {"$sum": "$views"},
+            "avg_views": {"$avg": "$views"}
+        }},
+        {"$sort": {"plaques": -1}},
+        {"$project": {
+            "_id": 0,
+            "borough": "$_id",
+            "plaques": 1,
+            "total_views": 1,
+            "avg_views": {"$round": ["$avg_views", 1]}
+        }}
+    ]
+    results = list(plaques.aggregate(pipeline))
+    return make_response(jsonify(results), 200)
+
+
+@app.route("/api/v1.0/analytics/ratings", methods=["GET"])
+def rating_stats():
+    pipeline = [
+        {"$unwind": "$visits"},
+        {"$group": {
+            "_id": "$borough",
+            "visits": {"$sum": 1},
+            "avg_history": {"$avg": "$visits.ratings.history"},
+            "avg_condition": {"$avg": "$visits.ratings.condition"},
+            "avg_accessibility": {"$avg": "$visits.ratings.accessibility"}
+        }},
+        {"$project": {
+            "_id": 0,
+            "borough": "$_id",
+            "visits": 1,
+            "avg_history": {"$round": ["$avg_history", 2]},
+            "avg_condition": {"$round": ["$avg_condition", 2]},
+            "avg_accessibility": {"$round": ["$avg_accessibility", 2]},
+            "avg_overall": {"$round": [
+                {"$avg": ["$avg_history", "$avg_condition", "$avg_accessibility"]}, 2
+            ]}
+        }},
+        {"$sort": {"avg_overall": -1}}
+    ]
+    results = list(plaques.aggregate(pipeline))
+    return make_response(jsonify(results), 200)
+
+
+@app.route("/api/v1.0/users/me/stats", methods=["GET"])
+@jwt_required
+def my_stats():
+    pipeline = [
+        {"$unwind": "$visits"},
+        {"$match": {"visits.username": g.user["username"]}},
+        {"$group": {
+            "_id": None,
+            "visits": {"$sum": 1},
+            "avg_rating_given": {"$avg": {"$avg": [
+                "$visits.ratings.history",
+                "$visits.ratings.condition",
+                "$visits.ratings.accessibility"
+            ]}},
+            "boroughs": {"$addToSet": "$borough"}
+        }},
+        {"$project": {
+            "_id": 0,
+            "visits": 1,
+            "avg_rating_given": {"$round": ["$avg_rating_given", 2]},
+            "boroughs": 1,
+            "boroughs_visited": {"$size": "$boroughs"}
+        }}
+    ]
+    results = list(plaques.aggregate(pipeline))
+
+    if not results:
+        return make_response(jsonify({"visits": 0, "avg_rating_given": None,
+                                      "boroughs": [], "boroughs_visited": 0}), 200)
+    return make_response(jsonify(results[0]), 200)
+
+@app.route("/api/v1.0/analytics/decades", methods=["GET"])
+def decade_stats():
+    pipeline = [
+        {"$match": {"erected_year": {"$ne": None}}},
+        {"$group": {
+            "_id": {"$multiply": [
+                {"$floor": {"$divide": ["$erected_year", 10]}},
+                10
+            ]},
+            "plaques": {"$sum": 1}
+        }},
+        {"$sort": {"_id": 1}},
+        {"$project": {
+            "_id": 0,
+            "decade": "$_id",
+            "plaques": 1
+        }}
+    ]
+    results = list(plaques.aggregate(pipeline))
+    return make_response(jsonify(results), 200)
+
 if __name__ == "__main__":
     app.run(debug=True, port=5001)
