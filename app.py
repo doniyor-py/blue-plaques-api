@@ -370,6 +370,60 @@ def remove_user_and_data(username):
     plaques.update_many({}, {"$pull": {"visits": {"username": username}}})
 
 
+# ===================== ACCOUNT =====================
+
+@app.route("/api/v1.0/users/me", methods=["GET"])
+@jwt_required
+def my_profile():
+    user = users.find_one({"username": g.user["username"]},
+                          {"_id": 0, "password": 0})
+    if user is None:
+        return make_response(jsonify({"error": "Account not found"}), 404)
+    return make_response(jsonify(user), 200)
+
+@app.route("/api/v1.0/users/me/password", methods=["PUT"])
+@jwt_required
+def change_password():
+    old_password = request.form.get("old_password", "")
+    new_password = request.form.get("new_password", "")
+
+    user = users.find_one({"username": g.user["username"]})
+    if user is None:
+        return make_response(jsonify({"error": "Account not found"}), 404)
+    if not bcrypt.checkpw(old_password.encode("utf-8"), user["password"]):
+        return make_response(jsonify({"error": "Old password is incorrect"}), 401)
+    if len(new_password) < 8:
+        return make_response(jsonify({"error": "new_password must be at least 8 characters"}), 400)
+    if new_password == old_password:
+        return make_response(jsonify({"error": "New password must be different from the old one"}), 400)
+
+    hashed = bcrypt.hashpw(new_password.encode("utf-8"), bcrypt.gensalt())
+    users.update_one({"username": g.user["username"]}, {"$set": {"password": hashed}})
+
+    # log out this token, so the user must log in again with the new password
+    blacklist.insert_one({"token": request.headers.get("x-access-token")})
+    return make_response(jsonify({"message": "Password changed, please log in again"}), 200)
+
+
+@app.route("/api/v1.0/users", methods=["GET"])
+@jwt_required
+@admin_required
+def list_users():
+    page, size, error = get_pagination()
+    if error:
+        return error
+
+    total = users.count_documents({})
+    data_to_return = list(users.find({}, {"_id": 0, "password": 0})
+                          .sort("username", 1).skip((page - 1) * size).limit(size))
+    return make_response(jsonify({
+        "total": total,
+        "page": page,
+        "pages": math.ceil(total / size),
+        "users": data_to_return
+    }), 200)
+
+
 # ===================== GEO =====================
 
 @app.route("/api/v1.0/plaques/nearby", methods=["GET"])
