@@ -12,6 +12,7 @@ import jwt
 import bcrypt
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+import math
 
 load_dotenv()
 SECRET_KEY = os.getenv("SECRET_KEY")
@@ -29,6 +30,20 @@ def too_many_requests(e):
     return make_response(jsonify({"error": "Too many requests, please try again later",
                                   "limit": str(e.description)}), 429)
 
+@app.errorhandler(404)
+def not_found(e):
+    return make_response(jsonify({"error": "Route not found - check the URL"}), 404)
+
+
+@app.errorhandler(405)
+def method_not_allowed(e):
+    return make_response(jsonify({"error": "Method not allowed on this route"}), 405)
+
+
+@app.errorhandler(500)
+def server_error(e):
+    return make_response(jsonify({"error": "Something went wrong on the server"}), 500)
+
 # MongoDB connection
 client = MongoClient("mongodb://localhost:27017")
 db = client.plaquesDB
@@ -40,6 +55,23 @@ users.create_index("username", unique=True)
 users.create_index("email", unique=True)
 
 plaques.create_index([("location", "2dsphere")])
+
+
+ALLOWED_COLOURS = ["blue", "green", "brown", "black", "red", "white",
+                   "grey", "yellow", "purple", "pink", "bronze", "stone"]
+
+
+def get_pagination():
+    try:
+        page = int(request.args.get("pn", 1))
+        size = int(request.args.get("ps", 10))
+    except ValueError:
+        return None, None, make_response(jsonify({"error": "pn and ps must be whole numbers"}), 400)
+    if page < 1:
+        return None, None, make_response(jsonify({"error": "pn must be 1 or more"}), 400)
+    if size < 1 or size > 100:
+        return None, None, make_response(jsonify({"error": "ps must be between 1 and 100"}), 400)
+    return page, size, None
 
 
 def clean_plaque(plaque):
@@ -87,18 +119,22 @@ def index():
 
 @app.route("/api/v1.0/plaques", methods=["GET"])
 def show_all_plaques():
-    page_num, page_size = 1, 10
-    if request.args.get("pn"):
-        page_num = int(request.args.get("pn"))
-    if request.args.get("ps"):
-        page_size = int(request.args.get("ps"))
-    page_start = page_size * (page_num - 1)
+    page, size, error = get_pagination()
+    if error:
+        return error
 
+    total = plaques.count_documents({})
     data_to_return = []
-    for plaque in plaques.find().sort("plaque_ref", 1).skip(page_start).limit(page_size):
+    for plaque in plaques.find().sort("plaque_ref", 1).skip((page - 1) * size).limit(size):
         data_to_return.append(clean_plaque(plaque))
 
-    return make_response(jsonify(data_to_return), 200)
+    return make_response(jsonify({
+        "total": total,
+        "page": page,
+        "page_size": size,
+        "pages": math.ceil(total / size),
+        "plaques": data_to_return
+    }), 200)
 
 
 @app.route("/api/v1.0/plaques/<string:id>", methods=["GET"])
@@ -137,6 +173,10 @@ def add_plaque():
 
     if erected_year < 1800 or erected_year > 2026:
         return make_response(jsonify({"error": "erected_year must be between 1800 and 2026"}), 400)
+
+    if request.form["colour"].lower() not in ALLOWED_COLOURS:
+        return make_response(jsonify({"error": "colour must be one of: " + ", ".join(ALLOWED_COLOURS)}), 400)
+    
     if not (-90 <= lat <= 90) or not (-180 <= lng <= 180):
         return make_response(jsonify({"error": "lat must be -90 to 90, lng must be -180 to 180"}), 400)
 
@@ -146,7 +186,7 @@ def add_plaque():
     new_plaque = {
         "plaque_ref": next_ref,
         "inscription": request.form["inscription"],
-        "colour": request.form["colour"],
+        "colour": request.form["colour"].lower(),
         "erected_year": erected_year,
         "organisation": request.form["organisation"],
         "address": request.form["address"],
@@ -174,6 +214,11 @@ def edit_plaque(id):
     for field in ["inscription", "colour", "organisation", "address", "borough"]:
         if request.form.get(field):
             changes[field] = request.form[field]
+
+    if "colour" in changes:
+        changes["colour"] = changes["colour"].lower()
+        if changes["colour"] not in ALLOWED_COLOURS:
+            return make_response(jsonify({"error": "colour must be one of: " + ", ".join(ALLOWED_COLOURS)}), 400)
 
     if request.form.get("erected_year"):
         try:
@@ -421,10 +466,18 @@ def add_visit(id):
     if error:
         return make_response(jsonify({"error": error}), 400)
 
+    today = date.today().isoformat()
+    already = plaques.find_one({
+        "_id": ObjectId(id),
+        "visits": {"$elemMatch": {"username": g.user["username"], "date": today}}
+    })
+    if already:
+        return make_response(jsonify({"error": "You already checked in here today"}), 409)
+
     new_visit = {
         "_id": ObjectId(),
         "username": g.user["username"],
-        "date": date.today().isoformat(),
+        "date": today,
         "note": request.form.get("note", ""),
         "ratings": ratings
     }
