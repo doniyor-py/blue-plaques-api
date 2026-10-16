@@ -1,27 +1,83 @@
-from flask import Flask, make_response, jsonify, request
+from flask import Flask, make_response, jsonify, request, g
 from flask_cors import CORS
 from pymongo import MongoClient, ReturnDocument
+from pymongo.errors import DuplicateKeyError
 from bson import ObjectId
-from datetime import date
+from datetime import date, datetime, timedelta, timezone
+from functools import wraps
+from dotenv import load_dotenv
+import os
+import re
+import jwt
+import bcrypt
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+
+load_dotenv()
+SECRET_KEY = os.getenv("SECRET_KEY")
+if not SECRET_KEY:
+    raise SystemExit("SECRET_KEY missing: create a .env file (see instructions)")
 
 app = Flask(__name__)
 CORS(app)
+
+limiter = Limiter(get_remote_address, app=app, storage_uri="memory://")
+
+
+@app.errorhandler(429)
+def too_many_requests(e):
+    return make_response(jsonify({"error": "Too many requests, please try again later",
+                                  "limit": str(e.description)}), 429)
 
 # MongoDB connection
 client = MongoClient("mongodb://localhost:27017")
 db = client.plaquesDB
 plaques = db.plaques
+users = db.users
+blacklist = db.blacklist
 
-# geo index: lets MongoDB search plaques by distance
+users.create_index("username", unique=True)
+users.create_index("email", unique=True)
+
 plaques.create_index([("location", "2dsphere")])
 
+
 def clean_plaque(plaque):
-    """Turn every ObjectId in a plaque (its own _id and each visit _id) into text for JSON."""
     plaque["_id"] = str(plaque["_id"])
     for visit in plaque.get("visits", []):
         visit["_id"] = str(visit["_id"])
     return plaque
 
+
+
+# ===================== AUTH DECORATORS =====================
+
+def jwt_required(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        token = request.headers.get("x-access-token")
+        if not token:
+            return make_response(jsonify({"error": "Token is missing"}), 401)
+        try:
+            data = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+        except jwt.ExpiredSignatureError:
+            return make_response(jsonify({"error": "Token has expired, please log in again"}), 401)
+        except jwt.InvalidTokenError:
+            return make_response(jsonify({"error": "Token is invalid"}), 401)
+        if blacklist.find_one({"token": token}):
+            return make_response(jsonify({"error": "Token has been logged out"}), 401)
+        g.user = data            # who is logged in, available inside the route
+        return func(*args, **kwargs)
+    return wrapper
+
+
+def admin_required(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if not g.user.get("admin"):
+            return make_response(jsonify({"error": "Admin access required"}), 403)
+        return func(*args, **kwargs)
+    return wrapper
 
 
 @app.route("/", methods=["GET"])
@@ -63,6 +119,8 @@ def show_one_plaque(id):
 
 
 @app.route("/api/v1.0/plaques", methods=["POST"])
+@jwt_required
+@admin_required
 def add_plaque():
     required = ["inscription", "colour", "erected_year", "organisation",
                 "address", "borough", "lat", "lng"]
@@ -106,6 +164,8 @@ def add_plaque():
 
 
 @app.route("/api/v1.0/plaques/<string:id>", methods=["PUT"])
+@jwt_required
+@admin_required
 def edit_plaque(id):
     if not ObjectId.is_valid(id):
         return make_response(jsonify({"error": "Invalid plaque ID"}), 400)
@@ -146,6 +206,8 @@ def edit_plaque(id):
 
 
 @app.route("/api/v1.0/plaques/<string:id>", methods=["DELETE"])
+@jwt_required
+@admin_required
 def delete_plaque(id):
     if not ObjectId.is_valid(id):
         return make_response(jsonify({"error": "Invalid plaque ID"}), 400)
@@ -166,114 +228,101 @@ def most_viewed():
 
 
 
-# ===================== VISITS (sub-documents) =====================
+# ===================== AUTH ROUTES =====================
 
-def check_ratings(form):
-    """Read the 3 ratings from the form. Returns (ratings, error)."""
-    ratings = {}
-    for name in ["history", "condition", "accessibility"]:
-        try:
-            value = int(form[name])
-        except (KeyError, ValueError):
-            return None, name + " must be a whole number from 1 to 5"
-        if value < 1 or value > 5:
-            return None, name + " must be between 1 and 5"
-        ratings[name] = value
-    return ratings, None
+@app.route("/api/v1.0/register", methods=["POST"])
+@limiter.limit("5 per hour")
+def register():
+    username = request.form.get("username", "").strip()
+    email = request.form.get("email", "").strip().lower()
+    password = request.form.get("password", "")
 
+    if not re.fullmatch(r"[A-Za-z0-9_]{3,20}", username):
+        return make_response(jsonify({"error": "username must be 3-20 letters, numbers or _"}), 400)
+    if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email):
+        return make_response(jsonify({"error": "A valid email is required"}), 400)
+    if len(password) < 8:
+        return make_response(jsonify({"error": "password must be at least 8 characters"}), 400)
+    if users.find_one({"username": username}):
+        return make_response(jsonify({"error": "Username already taken"}), 409)
+    if users.find_one({"email": email}):
+        return make_response(jsonify({"error": "Email already registered"}), 409)
 
-@app.route("/api/v1.0/plaques/<string:id>/visits", methods=["GET"])
-def get_all_visits(id):
-    if not ObjectId.is_valid(id):
-        return make_response(jsonify({"error": "Invalid plaque ID"}), 400)
-
-    plaque = plaques.find_one({"_id": ObjectId(id)}, {"visits": 1, "_id": 0})
-    if plaque is None:
-        return make_response(jsonify({"error": "Plaque not found"}), 404)
-
-    for visit in plaque["visits"]:
-        visit["_id"] = str(visit["_id"])
-    return make_response(jsonify(plaque["visits"]), 200)
-
-
-@app.route("/api/v1.0/plaques/<string:id>/visits", methods=["POST"])
-def add_visit(id):
-    if not ObjectId.is_valid(id):
-        return make_response(jsonify({"error": "Invalid plaque ID"}), 400)
-    if not request.form.get("username"):
-        return make_response(jsonify({"error": "Missing field: username"}), 400)
-
-    ratings, error = check_ratings(request.form)
-    if error:
-        return make_response(jsonify({"error": error}), 400)
-
-    new_visit = {
-        "_id": ObjectId(),
-        "username": request.form["username"],
-        "date": date.today().isoformat(),
-        "note": request.form.get("note", ""),
-        "ratings": ratings
-    }
-
-    result = plaques.update_one({"_id": ObjectId(id)}, {"$push": {"visits": new_visit}})
-    if result.matched_count == 0:
-        return make_response(jsonify({"error": "Plaque not found"}), 404)
-
-    new_link = "http://127.0.0.1:5001/api/v1.0/plaques/" + id + "/visits/" + str(new_visit["_id"])
-    return make_response(jsonify({"url": new_link}), 201)
+    hashed = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
+    try:
+        users.insert_one({
+            "username": username,
+            "email": email,
+            "password": hashed,
+            "admin": False             # new accounts are never admins
+        })
+    except DuplicateKeyError:          # two sign-ups with the same name at the same moment
+        return make_response(jsonify({"error": "Username or email already taken"}), 409)
+    return make_response(jsonify({"message": "Account created, you can now log in"}), 201)
 
 
-@app.route("/api/v1.0/plaques/<string:id>/visits/<string:vid>", methods=["GET"])
-def get_one_visit(id, vid):
-    if not ObjectId.is_valid(id) or not ObjectId.is_valid(vid):
-        return make_response(jsonify({"error": "Invalid plaque or visit ID"}), 400)
+@app.route("/api/v1.0/login", methods=["GET"])
+@limiter.limit("10 per minute")
+def login():
+    auth = request.authorization        
+    if not auth or not auth.username or not auth.password:
+        return make_response(jsonify({"error": "Username and password required (Basic Auth)"}), 401)
 
-    plaque = plaques.find_one({"_id": ObjectId(id)}, {"visits": 1})
-    if plaque is None:
-        return make_response(jsonify({"error": "Plaque not found"}), 404)
+    user = users.find_one({"username": auth.username})
+    if user is None or not bcrypt.checkpw(auth.password.encode("utf-8"), user["password"]):
+        return make_response(jsonify({"error": "Wrong username or password"}), 401)
 
-    for visit in plaque["visits"]:
-        if visit["_id"] == ObjectId(vid):
-            visit["_id"] = str(visit["_id"])
-            return make_response(jsonify(visit), 200)
-
-    return make_response(jsonify({"error": "Visit not found"}), 404)
-
-
-@app.route("/api/v1.0/plaques/<string:id>/visits/<string:vid>", methods=["PUT"])
-def edit_visit(id, vid):
-    if not ObjectId.is_valid(id) or not ObjectId.is_valid(vid):
-        return make_response(jsonify({"error": "Invalid plaque or visit ID"}), 400)
-
-    ratings, error = check_ratings(request.form)
-    if error:
-        return make_response(jsonify({"error": error}), 400)
-
-    changes = {"visits.$.ratings": ratings}
-    if "note" in request.form:
-        changes["visits.$.note"] = request.form["note"]
-
-    result = plaques.update_one({"_id": ObjectId(id), "visits._id": ObjectId(vid)},
-                                {"$set": changes})
-    if result.matched_count == 0:
-        return make_response(jsonify({"error": "Plaque or visit not found"}), 404)
-
-    edited_link = "http://127.0.0.1:5001/api/v1.0/plaques/" + id + "/visits/" + vid
-    return make_response(jsonify({"url": edited_link}), 200)
+    token = jwt.encode({
+        "username": user["username"],
+        "admin": user.get("admin", False),
+        "exp": datetime.now(timezone.utc) + timedelta(minutes=30)
+    }, SECRET_KEY, algorithm="HS256")
+    return make_response(jsonify({"token": token}), 200)
 
 
-@app.route("/api/v1.0/plaques/<string:id>/visits/<string:vid>", methods=["DELETE"])
-def delete_visit(id, vid):
-    if not ObjectId.is_valid(id) or not ObjectId.is_valid(vid):
-        return make_response(jsonify({"error": "Invalid plaque or visit ID"}), 400)
+@app.route("/api/v1.0/logout", methods=["GET"])
+@jwt_required
+def logout():
+    token = request.headers.get("x-access-token")
+    blacklist.insert_one({"token": token})
+    return make_response(jsonify({"message": "Logged out"}), 200)
 
-    result = plaques.update_one({"_id": ObjectId(id)},
-                                {"$pull": {"visits": {"_id": ObjectId(vid)}}})
-    if result.modified_count == 0:
-        return make_response(jsonify({"error": "Plaque or visit not found"}), 404)
 
+@app.route("/api/v1.0/users/me", methods=["DELETE"])
+@jwt_required
+def delete_my_account():
+    user = users.find_one({"username": g.user["username"]})
+    if user is None:
+        return make_response(jsonify({"error": "Account not found"}), 404)
+    if user.get("admin"):
+        return make_response(jsonify({"error": "Admin accounts cannot be deleted here"}), 403)
+
+    password = request.form.get("password", "")
+    if not bcrypt.checkpw(password.encode("utf-8"), user["password"]):
+        return make_response(jsonify({"error": "Password is incorrect"}), 401)
+
+    remove_user_and_data(user["username"])
+    blacklist.insert_one({"token": request.headers.get("x-access-token")})  
     return make_response(jsonify({}), 204)
 
+
+@app.route("/api/v1.0/users/<string:username>", methods=["DELETE"])
+@jwt_required
+@admin_required
+def admin_delete_user(username):
+    user = users.find_one({"username": username})
+    if user is None:
+        return make_response(jsonify({"error": "User not found"}), 404)
+    if user.get("admin"):
+        return make_response(jsonify({"error": "Admin accounts cannot be deleted"}), 403)
+
+    remove_user_and_data(username)
+    return make_response(jsonify({}), 204)
+
+
+def remove_user_and_data(username):
+    users.delete_one({"username": username})
+    plaques.update_many({}, {"$pull": {"visits": {"username": username}}})
 
 
 # ===================== GEO =====================
@@ -319,6 +368,133 @@ def plaques_nearby():
         data_to_return.append(plaque)
 
     return make_response(jsonify(data_to_return), 200)
+
+
+# ===================== VISITS (sub-documents) =====================
+
+def check_ratings(form):
+    ratings = {}
+    for name in ["history", "condition", "accessibility"]:
+        try:
+            value = int(form[name])
+        except (KeyError, ValueError):
+            return None, name + " must be a whole number from 1 to 5"
+        if value < 1 or value > 5:
+            return None, name + " must be between 1 and 5"
+        ratings[name] = value
+    return ratings, None
+
+
+def visit_owner_check(id, vid):
+    plaque = plaques.find_one({"_id": ObjectId(id)}, {"visits": 1})
+    if plaque is None:
+        return make_response(jsonify({"error": "Plaque not found"}), 404)
+    for visit in plaque["visits"]:
+        if visit["_id"] == ObjectId(vid):
+            if visit["username"] != g.user["username"] and not g.user.get("admin"):
+                return make_response(jsonify({"error": "You can only change your own visits"}), 403)
+            return None     
+    return make_response(jsonify({"error": "Visit not found"}), 404)
+
+
+@app.route("/api/v1.0/plaques/<string:id>/visits", methods=["GET"])
+def get_all_visits(id):
+    if not ObjectId.is_valid(id):
+        return make_response(jsonify({"error": "Invalid plaque ID"}), 400)
+
+    plaque = plaques.find_one({"_id": ObjectId(id)}, {"visits": 1, "_id": 0})
+    if plaque is None:
+        return make_response(jsonify({"error": "Plaque not found"}), 404)
+
+    for visit in plaque["visits"]:
+        visit["_id"] = str(visit["_id"])
+    return make_response(jsonify(plaque["visits"]), 200)
+
+
+@app.route("/api/v1.0/plaques/<string:id>/visits", methods=["POST"])
+@jwt_required
+def add_visit(id):
+    if not ObjectId.is_valid(id):
+        return make_response(jsonify({"error": "Invalid plaque ID"}), 400)
+
+    ratings, error = check_ratings(request.form)
+    if error:
+        return make_response(jsonify({"error": error}), 400)
+
+    new_visit = {
+        "_id": ObjectId(),
+        "username": g.user["username"],
+        "date": date.today().isoformat(),
+        "note": request.form.get("note", ""),
+        "ratings": ratings
+    }
+
+    result = plaques.update_one({"_id": ObjectId(id)}, {"$push": {"visits": new_visit}})
+    if result.matched_count == 0:
+        return make_response(jsonify({"error": "Plaque not found"}), 404)
+
+    new_link = "http://127.0.0.1:5001/api/v1.0/plaques/" + id + "/visits/" + str(new_visit["_id"])
+    return make_response(jsonify({"url": new_link}), 201)
+
+
+@app.route("/api/v1.0/plaques/<string:id>/visits/<string:vid>", methods=["GET"])
+def get_one_visit(id, vid):
+    if not ObjectId.is_valid(id) or not ObjectId.is_valid(vid):
+        return make_response(jsonify({"error": "Invalid plaque or visit ID"}), 400)
+
+    plaque = plaques.find_one({"_id": ObjectId(id)}, {"visits": 1})
+    if plaque is None:
+        return make_response(jsonify({"error": "Plaque not found"}), 404)
+
+    for visit in plaque["visits"]:
+        if visit["_id"] == ObjectId(vid):
+            visit["_id"] = str(visit["_id"])
+            return make_response(jsonify(visit), 200)
+
+    return make_response(jsonify({"error": "Visit not found"}), 404)
+
+
+@app.route("/api/v1.0/plaques/<string:id>/visits/<string:vid>", methods=["PUT"])
+@jwt_required
+def edit_visit(id, vid):
+    if not ObjectId.is_valid(id) or not ObjectId.is_valid(vid):
+        return make_response(jsonify({"error": "Invalid plaque or visit ID"}), 400)
+    error = visit_owner_check(id, vid)
+    if error:
+        return error
+
+    ratings, error = check_ratings(request.form)
+    if error:
+        return make_response(jsonify({"error": error}), 400)
+
+    changes = {"visits.$.ratings": ratings}
+    if "note" in request.form:
+        changes["visits.$.note"] = request.form["note"]
+
+    result = plaques.update_one({"_id": ObjectId(id), "visits._id": ObjectId(vid)},
+                                {"$set": changes})
+    if result.matched_count == 0:
+        return make_response(jsonify({"error": "Plaque or visit not found"}), 404)
+
+    edited_link = "http://127.0.0.1:5001/api/v1.0/plaques/" + id + "/visits/" + vid
+    return make_response(jsonify({"url": edited_link}), 200)
+
+
+@app.route("/api/v1.0/plaques/<string:id>/visits/<string:vid>", methods=["DELETE"])
+@jwt_required
+def delete_visit(id, vid):
+    if not ObjectId.is_valid(id) or not ObjectId.is_valid(vid):
+        return make_response(jsonify({"error": "Invalid plaque or visit ID"}), 400)
+    error = visit_owner_check(id, vid)
+    if error:
+        return error
+
+    result = plaques.update_one({"_id": ObjectId(id)},
+                                {"$pull": {"visits": {"_id": ObjectId(vid)}}})
+    if result.modified_count == 0:
+        return make_response(jsonify({"error": "Plaque or visit not found"}), 404)
+
+    return make_response(jsonify({}), 204)
 
 
 if __name__ == "__main__":

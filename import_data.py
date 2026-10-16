@@ -12,10 +12,9 @@ import json
 import random
 from bson import ObjectId
 
-random.seed(661)  # same "random" data every time you run it
+random.seed(661) 
 
 BOROUGHS = {
-    # borough: (latitude, longitude) of a central point
     "Camden": (51.5390, -0.1426),
     "Westminster": (51.4975, -0.1357),
     "Kensington and Chelsea": (51.5020, -0.1947),
@@ -45,7 +44,7 @@ USERNAMES = ["user1", "user2", "user3", "user4", "user5",
 
 def make_person():
     born = random.randint(1700, 1920)
-    died = min(born + random.randint(30, 95), 2000)  # plaques need time after death
+    died = min(born + random.randint(30, 95), 2000)
     events = [{"year": born, "event": "born", "place": "London"}]
     for _ in range(random.randint(1, 3)):
         events.append({
@@ -68,11 +67,11 @@ def make_person():
 
 def make_visit():
     return {
-        "_id": {"$oid": str(ObjectId())},   # each visit gets its own id
+        "_id": {"$oid": str(ObjectId())},  
         "username": random.choice(USERNAMES),
         "date": f"2026-{random.randint(1, 9):02d}-{random.randint(1, 28):02d}",
         "note": random.choice(NOTES),
-        "ratings": {                      # numbers for $avg / $sum
+        "ratings": {                   
             "history": random.randint(1, 5),
             "condition": random.randint(1, 5),
             "accessibility": random.randint(1, 5),
@@ -99,7 +98,7 @@ def generate_data(count=150):
             "organisation": random.choice(ORGANISATIONS),
             "address": f"{random.randint(1, 200)} {random.choice(LAST)} Street",
             "borough": borough,
-            "location": {                 # GeoJSON: [longitude, latitude]
+            "location": {             
                 "type": "Point",
                 "coordinates": [round(lng, 6), round(lat, 6)],
             },
