@@ -33,6 +33,15 @@ EMAIL_MODE = os.getenv("EMAIL_MODE", "console")           # "console" (CW1) or "
 SMTP_USER = os.getenv("SMTP_USER")                        # only needed for "smtp"
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
 
+
+if not TURNSTILE_SECRET:
+    raise SystemExit("TURNSTILE_SECRET missing: add it to .env (test key: 1x0000000000000000000000000000000AA)")
+if EMAIL_MODE not in ("console", "smtp"):
+    raise SystemExit('EMAIL_MODE must be "console" or "smtp"')
+if EMAIL_MODE == "smtp" and not (SMTP_USER and SMTP_PASSWORD):
+    raise SystemExit("EMAIL_MODE=smtp needs SMTP_USER and SMTP_PASSWORD in .env")
+
+
 app = Flask(__name__)
 CORS(app)
 
@@ -479,27 +488,29 @@ def most_viewed():
 @app.route("/api/v1.0/register", methods=["POST"])
 @limiter.limit("5 per hour")
 def register():
-    username = request.form.get("username", "").strip()
+    username = request.form.get("username", "").strip().lower()
     email = request.form.get("email", "").strip().lower()
     password = request.form.get("password", "")
 
-    # 1. are you human?
-    if not is_human(request.form.get("captcha_token")):
-        return make_response(jsonify({"error": "Human check failed, please try again"}), 400)
-
-    # 2. check the input
-    if not re.fullmatch(r"[A-Za-z0-9_]{3,20}", username):
+    # 1. check the input (free, so it runs first)
+    if not re.fullmatch(r"[a-z0-9_]{3,20}", username):
         return make_response(jsonify({"error": "username must be 3-20 letters, numbers or _"}), 400)
     if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email):
         return make_response(jsonify({"error": "A valid email is required"}), 400)
     if len(password) < 8 or password_too_long(password):
         return make_response(jsonify({"error": "password must be 8-72 characters"}), 400)
+
+    # 2. are you human? (asks Cloudflare, so only once the input is valid)
+    if not is_human(request.form.get("captcha_token")):
+        return make_response(jsonify({"error": "Human check failed, please try again"}), 400)
+
+    # 3. is the name or email already used?
     if users.find_one({"username": username}):
         return make_response(jsonify({"error": "Username already taken"}), 409)
     if users.find_one({"email": email}):
         return make_response(jsonify({"error": "Email already registered"}), 409)
 
-    # 3. remember the details with the code, and email the code
+    # 4. remember the details with the code, and email the code
     hashed = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
     code = create_otp(email, "register", {"username": username, "password": hashed})
     send_email(email, "Your Blue Plaques sign-up code",
@@ -577,7 +588,7 @@ def login():
     if not auth or not auth.username or not auth.password:
         return make_response(jsonify({"error": "Username and password required (Basic Auth)"}), 401)
 
-    user = users.find_one({"username": auth.username})
+    user = users.find_one({"username": auth.username.strip().lower()})
     if (user is None or password_too_long(auth.password)
             or not bcrypt.checkpw(auth.password.encode("utf-8"), user["password"])):
         return make_response(jsonify({"error": "Wrong username or password"}), 401)
@@ -621,6 +632,7 @@ def delete_my_account():
 @jwt_required
 @admin_required
 def admin_delete_user(username):
+    username = username.strip().lower() 
     user = users.find_one({"username": username})
     if user is None:
         return make_response(jsonify({"error": "User not found"}), 404)
