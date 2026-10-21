@@ -95,7 +95,8 @@ users.create_index("email", unique=True)
 blacklist.create_index("token")
 
 plaques.create_index([("location", "2dsphere")])
-plaques.create_index([("views", -1), ("plaque_ref", 1)])     # new: most-viewed sort
+plaques.create_index([("views", -1), ("plaque_ref", 1)])
+plaques.create_index("plaque_ref", unique=True)   
 
 ALLOWED_COLOURS = [
     "belgian blue stone", "black", "blue", "brass", "bronze", "brown",
@@ -357,13 +358,10 @@ def add_plaque():
     if not (-90 <= lat <= 90) or not (-180 <= lng <= 180):
         return make_response(jsonify({"error": "lat must be -90 to 90, lng must be -180 to 180"}), 400)
 
-    last = plaques.find_one(sort=[("plaque_ref", -1)])
-    next_ref = last["plaque_ref"] + 1 if last else 1
     title = text["title"] or f"{colour.capitalize()} plaque at {text['address']}"
     category = text["category"].lower() or "other"
 
     new_plaque = {
-        "plaque_ref": next_ref,
         "title": title, 
         "inscription": text["inscription"],
         "colour": colour,
@@ -379,7 +377,19 @@ def add_plaque():
         "visits": []
     }
 
-    new_id = plaques.insert_one(new_plaque).inserted_id
+    # Take the next free number. If another request took it at the same moment,
+    # the unique index rejects ours, so we read the highest number again and retry.
+    for attempt in range(3):
+        last = plaques.find_one({}, {"plaque_ref": 1}, sort=[("plaque_ref", -1)])
+        new_plaque["plaque_ref"] = last["plaque_ref"] + 1 if last else 1
+        try:
+            new_id = plaques.insert_one(new_plaque).inserted_id
+            break
+        except DuplicateKeyError:
+            new_plaque.pop("_id", None)           # insert_one added an _id; get a fresh one next time
+    else:
+        return make_response(jsonify({"error": "Could not create the plaque, please try again"}), 409)
+
     new_link = request.host_url + "api/v1.0/plaques/" + str(new_id)
     return make_response(jsonify({"url": new_link}), 201)
 
