@@ -325,7 +325,7 @@ def add_plaque():
     }
 
     new_id = plaques.insert_one(new_plaque).inserted_id
-    new_link = "http://127.0.0.1:5001/api/v1.0/plaques/" + str(new_id)
+    new_link = request.host_url + "api/v1.0/plaques/" + str(new_id)
     return make_response(jsonify({"url": new_link}), 201)
 
 
@@ -372,7 +372,7 @@ def edit_plaque(id):
     if result.matched_count == 0:
         return make_response(jsonify({"error": "Plaque not found"}), 404)
 
-    edited_link = "http://127.0.0.1:5001/api/v1.0/plaques/" + id
+    edited_link = request.host_url + "api/v1.0/plaques/" + id
     return make_response(jsonify({"url": edited_link}), 200)
 
 
@@ -746,7 +746,7 @@ def add_visit(id):
     if result.matched_count == 0:
         return make_response(jsonify({"error": "Plaque not found"}), 404)
 
-    new_link = "http://127.0.0.1:5001/api/v1.0/plaques/" + id + "/visits/" + str(new_visit["_id"])
+    new_link = request.host_url + "api/v1.0/plaques/" + id + "/visits/" + str(new_visit["_id"])
     return make_response(jsonify({"url": new_link}), 201)
 
 
@@ -789,7 +789,7 @@ def edit_visit(id, vid):
     if result.matched_count == 0:
         return make_response(jsonify({"error": "Plaque or visit not found"}), 404)
 
-    edited_link = "http://127.0.0.1:5001/api/v1.0/plaques/" + id + "/visits/" + vid
+    edited_link = request.host_url + "api/v1.0/plaques/" + id + "/visits/" + vid
     return make_response(jsonify({"url": edited_link}), 200)
 
 
