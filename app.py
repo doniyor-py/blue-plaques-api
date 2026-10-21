@@ -1175,9 +1175,13 @@ def clean_report(report):
     report["created"] = report["created"].isoformat()
     return report
 
+def current_username():
+    """Rate-limit key for logged-in routes: count per account, not per IP address."""
+    return g.user["username"]
 
 @app.route("/api/v1.0/plaques/<string:id>/reports", methods=["POST"])
 @jwt_required
+@limiter.limit("5 per hour", key_func=current_username)
 def report_problem(id):
     if not ObjectId.is_valid(id):
         return make_response(jsonify({"error": "Invalid plaque ID"}), 400)
@@ -1191,6 +1195,10 @@ def report_problem(id):
     if plaques.find_one({"_id": ObjectId(id)}, {"_id": 1}) is None:
         return make_response(jsonify({"error": "Plaque not found"}), 404)
 
+    already = reports.find_one({"plaque_id": ObjectId(id), "username": g.user["username"],
+                                "status": {"$ne": "resolved"}})
+    if already:
+        return make_response(jsonify({"error": "You already reported this plaque, an admin is checking it"}), 409)
     new_id = reports.insert_one({
         "plaque_id": ObjectId(id),
         "username": g.user["username"],
