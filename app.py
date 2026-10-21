@@ -96,7 +96,12 @@ blacklist.create_index("token")
 
 plaques.create_index([("location", "2dsphere")])
 plaques.create_index([("views", -1), ("plaque_ref", 1)])
-plaques.create_index("plaque_ref", unique=True)   
+plaques.create_index("plaque_ref", unique=True)
+plaques.create_index("visits.username")
+plaques.create_index("borough")
+plaques.create_index("category")
+plaques.create_index("colour")
+plaques.create_index("erected_year")
 
 ALLOWED_COLOURS = [
     "belgian blue stone", "black", "blue", "brass", "bronze", "brown",
@@ -962,8 +967,9 @@ def rating_stats():
 @jwt_required
 def my_stats():
     pipeline = [
-        {"$unwind": "$visits"},
-        {"$match": {"visits.username": g.user["username"]}},
+        {"$match": {"visits.username": g.user["username"]}},  
+        {"$unwind": "$visits"},                                 
+        {"$match": {"visits.username": g.user["username"]}}, 
         {"$group": {
             "_id": None,
             "visits": {"$sum": 1},
@@ -1164,9 +1170,10 @@ def remove_favourite(id):
 def random_plaque():
     pipeline = []
     if request.args.get("borough"):
-        name = re.escape(request.args["borough"].strip())
-        pipeline.append({"$match": {"borough": {"$regex": "^" + name + "$", "$options": "i"}}})
-    pipeline.append({"$sample": {"size": 1}})
+        borough = find_borough(request.args["borough"])
+        if borough is None:
+            return make_response(jsonify({"error": "Unknown borough (see /api/v1.0/boroughs)"}), 400)
+        pipeline.append({"$match": {"borough": borough}})
 
     results = list(plaques.aggregate(pipeline))
     if not results:
@@ -1285,8 +1292,14 @@ def build_search_query(args):
 
     # 2. borough(s), any capitalisation: "camden" finds "Camden"
     if args.get("borough"):
-        names = [b.strip() for b in args["borough"].split(",") if b.strip()]
-        query["borough"] = {"$in": [re.compile("^" + re.escape(n) + "$", re.IGNORECASE) for n in names]}
+        names = []
+        for name in args["borough"].split(","):
+            if name.strip():
+                borough = find_borough(name)
+                if borough is None:
+                    return None, "Unknown borough: " + name.strip() + " (see /api/v1.0/boroughs)"
+                names.append(borough)
+        query["borough"] = {"$in": names}
 
     # 3. colour(s), checked against the allowed list
     if args.get("colour"):
