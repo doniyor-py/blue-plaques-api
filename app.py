@@ -235,7 +235,13 @@ def admin_required(func):
 
 @app.route("/", methods=["GET"])
 def index():
-    return make_response("<h1>Blue Plaques Explorer API</h1>", 200)
+    return make_response(jsonify({
+        "name": "London Blue Plaques Explorer API",
+        "version": "1.0",
+        "plaques": request.host_url + "api/v1.0/plaques",
+        "search": request.host_url + "api/v1.0/plaques/search?q=dickens",
+        "nearby": request.host_url + "api/v1.0/plaques/nearby?lat=51.508&lng=-0.128"
+    }), 200)
 
 
 @app.route("/api/v1.0/plaques", methods=["GET"])
@@ -383,9 +389,15 @@ def delete_plaque(id):
     if not ObjectId.is_valid(id):
         return make_response(jsonify({"error": "Invalid plaque ID"}), 400)
 
-    result = plaques.delete_one({"_id": ObjectId(id)})
-    if result.deleted_count == 0:
+    plaque = plaques.find_one({"_id": ObjectId(id)}, {"photos": 1})
+    if plaque is None:
         return make_response(jsonify({"error": "Plaque not found"}), 404)
+
+    for photo in plaque.get("photos", []):       
+        delete_photo_file(photo)
+    plaques.delete_one({"_id": ObjectId(id)})
+    reports.delete_many({"plaque_id": ObjectId(id)})                      
+    users.update_many({}, {"$pull": {"favourites": ObjectId(id)}})        
 
     return make_response(jsonify({}), 204)
 
@@ -1070,7 +1082,8 @@ def remove_favourite(id):
 def random_plaque():
     pipeline = []
     if request.args.get("borough"):
-        pipeline.append({"$match": {"borough": request.args["borough"]}})
+        name = re.escape(request.args["borough"].strip())
+        pipeline.append({"$match": {"borough": {"$regex": "^" + name + "$", "$options": "i"}}})
     pipeline.append({"$sample": {"size": 1}})
 
     results = list(plaques.aggregate(pipeline))
