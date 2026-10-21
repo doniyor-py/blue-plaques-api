@@ -17,6 +17,7 @@ import secrets
 import smtplib
 import requests
 from email.message import EmailMessage
+from flask import Flask, make_response, jsonify, request, g, send_from_directory
 
 load_dotenv()
 SECRET_KEY = os.getenv("SECRET_KEY")
@@ -33,6 +34,15 @@ CORS(app)
 
 limiter = Limiter(get_remote_address, app=app, storage_uri="memory://")
 
+# Photo uploads: saved in the "uploads" folder next to app.py, 5 MB maximum
+UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "uploads")
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024
+
+
+@app.errorhandler(413)
+def too_large(e):
+    return make_response(jsonify({"error": "File is too large, maximum 5 MB"}), 413)
 
 @app.errorhandler(429)
 def too_many_requests(e):
@@ -99,6 +109,8 @@ def clean_plaque(plaque):
     plaque["_id"] = str(plaque["_id"])
     for visit in plaque.get("visits", []):
         visit["_id"] = str(visit["_id"])
+    for photo in plaque.get("photos", []):          
+        photo["_id"] = str(photo["_id"]) 
     return plaque
 
 
@@ -556,6 +568,11 @@ def admin_delete_user(username):
 def remove_user_and_data(username):
     users.delete_one({"username": username})
     plaques.update_many({}, {"$pull": {"visits": {"username": username}}})
+    for plaque in plaques.find({"photos.username": username}, {"photos": 1}):  
+        for photo in plaque["photos"]:                                          
+            if photo["username"] == username:                                   
+                delete_photo_file(photo)                                        
+    plaques.update_many({}, {"$pull": {"photos": {"username": username}}})       
 
 
 # ===================== ACCOUNT =====================
@@ -1237,6 +1254,109 @@ def search_plaques():
         "pages": math.ceil(total / size),
         "plaques": data_to_return
     }), 200)
+
+
+
+
+# ===================== PHOTOS (sub-documents + image files) =====================
+
+def image_type(data):
+    """Look at the first bytes of the file to see what it really is."""
+    if data.startswith(b"\xff\xd8\xff"):
+        return "jpg"
+    if data.startswith(b"\x89PNG\r\n\x1a\n"):
+        return "png"
+    if data[:4] == b"RIFF" and data[8:12] == b"WEBP":
+        return "webp"
+    return None
+
+
+def delete_photo_file(photo):
+    path = os.path.join(UPLOAD_FOLDER, photo["filename"])
+    if os.path.exists(path):
+        os.remove(path)
+
+
+@app.route("/api/v1.0/plaques/<string:id>/photos", methods=["POST"])
+@jwt_required
+@limiter.limit("10 per minute")
+def add_photo(id):
+    if not ObjectId.is_valid(id):
+        return make_response(jsonify({"error": "Invalid plaque ID"}), 400)
+    if not plaques.find_one({"_id": ObjectId(id)}, {"_id": 1}):
+        return make_response(jsonify({"error": "Plaque not found"}), 404)
+
+    file = request.files.get("photo")
+    if file is None or file.filename == "":
+        return make_response(jsonify({"error": "Attach an image in the 'photo' field"}), 400)
+
+    data = file.read()
+    kind = image_type(data)
+    if kind is None:
+        return make_response(jsonify({"error": "Photo must be a JPG, PNG or WEBP image"}), 400)
+
+    caption = request.form.get("caption", "").strip()
+    if len(caption) > 200:
+        return make_response(jsonify({"error": "caption must be 200 characters or fewer"}), 400)
+
+    photo_id = ObjectId()
+    filename = str(photo_id) + "." + kind
+    with open(os.path.join(UPLOAD_FOLDER, filename), "wb") as f:
+        f.write(data)
+
+    new_photo = {
+        "_id": photo_id,
+        "filename": filename,
+        "url": request.host_url + "api/v1.0/photos/" + filename,
+        "caption": caption,
+        "username": g.user["username"],
+        "uploaded": date.today().isoformat()
+    }
+    plaques.update_one({"_id": ObjectId(id)}, {"$push": {"photos": new_photo}})
+
+    new_photo["_id"] = str(photo_id)
+    return make_response(jsonify(new_photo), 201)
+
+
+@app.route("/api/v1.0/plaques/<string:id>/photos", methods=["GET"])
+def get_photos(id):
+    if not ObjectId.is_valid(id):
+        return make_response(jsonify({"error": "Invalid plaque ID"}), 400)
+    plaque = plaques.find_one({"_id": ObjectId(id)}, {"photos": 1})
+    if plaque is None:
+        return make_response(jsonify({"error": "Plaque not found"}), 404)
+
+    data_to_return = []
+    for photo in plaque.get("photos", []):
+        photo["_id"] = str(photo["_id"])
+        data_to_return.append(photo)
+    return make_response(jsonify(data_to_return), 200)
+
+
+@app.route("/api/v1.0/photos/<string:filename>", methods=["GET"])
+def show_photo_file(filename):
+    return send_from_directory(UPLOAD_FOLDER, filename)
+
+
+@app.route("/api/v1.0/plaques/<string:id>/photos/<string:pid>", methods=["DELETE"])
+@jwt_required
+def delete_photo(id, pid):
+    if not ObjectId.is_valid(id) or not ObjectId.is_valid(pid):
+        return make_response(jsonify({"error": "Invalid plaque or photo ID"}), 400)
+    plaque = plaques.find_one({"_id": ObjectId(id)}, {"photos": 1})
+    if plaque is None:
+        return make_response(jsonify({"error": "Plaque not found"}), 404)
+
+    for photo in plaque.get("photos", []):
+        if photo["_id"] == ObjectId(pid):
+            if photo["username"] != g.user["username"] and not g.user.get("admin"):
+                return make_response(jsonify({"error": "You can only delete your own photos"}), 403)
+            plaques.update_one({"_id": ObjectId(id)},
+                               {"$pull": {"photos": {"_id": ObjectId(pid)}}})
+            delete_photo_file(photo)
+            return make_response(jsonify({}), 204)
+
+    return make_response(jsonify({"error": "Photo not found"}), 404)
 
 
 
