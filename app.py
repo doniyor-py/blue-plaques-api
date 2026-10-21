@@ -3,7 +3,6 @@ import os
 
 from flask import Flask, make_response, jsonify, request
 from flask_cors import CORS
-
 from globals import UPLOAD_FOLDER
 from extensions import limiter
 from blueprints.plaques.plaques import plaques_bp

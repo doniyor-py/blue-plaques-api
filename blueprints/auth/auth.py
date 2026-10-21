@@ -57,7 +57,8 @@ def register():
 def register_verify():
     email = request.form.get("email", "").strip().lower()
     code = request.form.get("code", "").strip()
-
+    if not re.fullmatch(r"\d{6}", code):
+        return make_response(jsonify({"error": "code must be 6 digits"}), 400)
     saved, error = check_otp(email, "register", code)
     if error:
         return make_response(jsonify({"error": error}), 400)
@@ -94,6 +95,8 @@ def forgot_password():
 def reset_password():
     email = request.form.get("email", "").strip().lower()
     code = request.form.get("code", "").strip()
+    if not re.fullmatch(r"\d{6}", code):
+        return make_response(jsonify({"error": "code must be 6 digits"}), 400)
     new_password = request.form.get("new_password", "")
 
     if len(new_password) < 8 or password_too_long(new_password):

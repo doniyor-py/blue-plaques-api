@@ -38,8 +38,8 @@ def get_pagination():
         size = int(request.args.get("ps", 10))
     except ValueError:
         return None, None, make_response(jsonify({"error": "pn and ps must be whole numbers"}), 400)
-    if page < 1:
-        return None, None, make_response(jsonify({"error": "pn must be 1 or more"}), 400)
+    if page < 1 or page > 100000:
+        return None, None, make_response(jsonify({"error": "pn must be between 1 and 100000"}), 400)
     if size < 1 or size > 100:
         return None, None, make_response(jsonify({"error": "ps must be between 1 and 100"}), 400)
     return page, size, None

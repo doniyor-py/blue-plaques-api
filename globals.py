@@ -5,8 +5,9 @@ from pymongo import MongoClient
 
 load_dotenv()
 SECRET_KEY = os.getenv("SECRET_KEY")
-if not SECRET_KEY:
-    raise SystemExit("SECRET_KEY missing: create a .env file (see instructions)")
+if not SECRET_KEY or len(SECRET_KEY) < 32 or SECRET_KEY.startswith("change-"):
+    raise SystemExit('SECRET_KEY must be 32+ random characters, make one with: '
+                     'python -c "import secrets; print(secrets.token_hex(32))"')
 
 TURNSTILE_SECRET = os.getenv("TURNSTILE_SECRET")          # Cloudflare human check
 EMAIL_MODE = os.getenv("EMAIL_MODE", "console")           # "console" (CW1) or "smtp" (CW2)

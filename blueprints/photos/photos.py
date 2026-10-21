@@ -18,21 +18,23 @@ photos_bp = Blueprint("photos_bp", __name__)
 
 MAX_PHOTO_SIDE = 1600                  # longest side in pixels after resizing
 
-
-Image.MAX_IMAGE_PIXELS = 40_000_000     # refuse giant images that could exhaust memory
+MAX_PIXELS = 40_000_000                 # largest image we accept (width x height)
+Image.MAX_IMAGE_PIXELS = MAX_PIXELS     # Pillow's own safety net
 
 
 def clean_image(data):
     """Open the upload with Pillow and return a fresh JPEG with no hidden data, or None."""
     try:
         with Image.open(io.BytesIO(data)) as img:
-            if img.format not in ("JPEG", "PNG", "WEBP"):
+            if img.format not in ("JPEG", "MPO", "PNG", "WEBP"):   
                 return None
-            img = ImageOps.exif_transpose(img)                  # keep phone photos the right way up
-            img.thumbnail((MAX_PHOTO_SIDE, MAX_PHOTO_SIDE))      # shrink, keeping the shape
-            img = img.convert("RGB")                             # JPEG has no transparency
+            if img.width * img.height > MAX_PIXELS:         
+                return None
+            img = ImageOps.exif_transpose(img)             
+            img.thumbnail((MAX_PHOTO_SIDE, MAX_PHOTO_SIDE))
+            img = img.convert("RGB")
             output = io.BytesIO()
-            img.save(output, "JPEG", quality=85)                 # new file: EXIF and GPS are not copied
+            img.save(output, "JPEG", quality=85)
             return output.getvalue()
     except (UnidentifiedImageError, Image.DecompressionBombError, OSError, ValueError):
         return None

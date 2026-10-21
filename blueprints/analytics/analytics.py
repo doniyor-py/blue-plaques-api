@@ -82,8 +82,8 @@ def top_rated():
         limit = int(request.args.get("limit", 10))
     except ValueError:
         return make_response(jsonify({"error": "min_visits and limit must be whole numbers"}), 400)
-    if min_visits < 1 or limit < 1 or limit > 50:
-        return make_response(jsonify({"error": "min_visits must be 1+, limit must be 1-50"}), 400)
+    if min_visits < 1 or min_visits > 1000 or limit < 1 or limit > 50:
+        return make_response(jsonify({"error": "min_visits must be 1-1000, limit must be 1-50"}), 400)
 
     pipeline = [
         {"$unwind": "$visits"},

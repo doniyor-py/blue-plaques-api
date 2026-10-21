@@ -76,7 +76,7 @@ def add_plaque():
         return make_response(jsonify({"error": "erected_year must be a whole number, lat and lng must be numbers"}), 400)
 
     if erected_year < 1800 or erected_year > date.today().year:
-        return make_response(jsonify({"error": "erected_year must be between 1800 and 2026"}), 400)
+        return make_response(jsonify({"error": f"erected_year must be between 1800 and {date.today().year}"}), 400)
 
     borough = find_borough(text["borough"])
     if borough is None:
@@ -152,7 +152,7 @@ def edit_plaque(id):
         except ValueError:
             return make_response(jsonify({"error": "erected_year must be a whole number"}), 400)
         if erected_year < 1800 or erected_year > date.today().year:
-            return make_response(jsonify({"error": "erected_year must be between 1800 and 2026"}), 400)
+            return make_response(jsonify({"error": f"erected_year must be between 1800 and {date.today().year}"}), 400)
         changes["erected_year"] = erected_year
 
     if request.form.get("lat") or request.form.get("lng"):
@@ -275,6 +275,7 @@ def random_plaque():
         if borough is None:
             return make_response(jsonify({"error": "Unknown borough (see /api/v1.0/boroughs)"}), 400)
         pipeline.append({"$match": {"borough": borough}})
+    pipeline.append({"$sample": {"size": 1}})
 
     results = list(plaques.aggregate(pipeline))
     if not results:
@@ -332,6 +333,8 @@ def build_search_query(args):
             years["$lte"] = int(args["to_year"])
     except ValueError:
         return None, "from_year and to_year must be whole numbers"
+    if any(not 0 <= y <= 3000 for y in years.values()):
+        return None, "from_year and to_year must be between 0 and 3000"
     if "$gte" in years and "$lte" in years and years["$gte"] > years["$lte"]:
         return None, "from_year must not be after to_year"
     if years:
@@ -343,6 +346,8 @@ def build_search_query(args):
             year = int(args["alive_in"])
         except ValueError:
             return None, "alive_in must be a whole number"
+        if not 0 <= year <= 3000:
+                return None, "alive_in must be between 0 and 3000"
         query["people"] = {"$elemMatch": {"born": {"$lte": year}, "died": {"$gte": year}}}
 
     return query, None
