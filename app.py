@@ -20,6 +20,7 @@ import smtplib
 import requests
 from email.message import EmailMessage
 from PIL import Image, ImageOps, UnidentifiedImageError
+from boroughs import LONDON_BOROUGHS, find_borough
 from flask import Flask, make_response, jsonify, request, g, send_from_directory
 
 load_dotenv()
@@ -336,6 +337,10 @@ def add_plaque():
     if erected_year < 1800 or erected_year > date.today().year:
         return make_response(jsonify({"error": "erected_year must be between 1800 and 2026"}), 400)
 
+    borough = find_borough(text["borough"])
+    if borough is None:
+        return make_response(jsonify({"error": "borough must be a London borough, see /api/v1.0/boroughs"}), 400)
+    
     colour = text["colour"].lower()
     if colour not in ALLOWED_COLOURS:
         return make_response(jsonify({"error": "colour must be one of: " + ", ".join(ALLOWED_COLOURS)}), 400)
@@ -356,7 +361,7 @@ def add_plaque():
         "erected_year": erected_year,
         "organisation": text["organisation"],
         "address": text["address"],
-        "borough": text["borough"],
+        "borough": borough,
         "category": category,
         "location": {"type": "Point", "coordinates": [lng, lat]},
         "views": 0,
@@ -410,6 +415,11 @@ def edit_plaque(id):
             return make_response(jsonify({"error": "lat must be -90 to 90, lng must be -180 to 180"}), 400)
         changes["location"] = {"type": "Point", "coordinates": [lng, lat]}
 
+    if "borough" in changes:
+        changes["borough"] = find_borough(changes["borough"])
+        if changes["borough"] is None:
+            return make_response(jsonify({"error": "borough must be a London borough, see /api/v1.0/boroughs"}), 400)
+
     if not changes:
         return make_response(jsonify({"error": "No fields to update"}), 400)
 
@@ -440,6 +450,10 @@ def delete_plaque(id):
 
     return make_response(jsonify({}), 204)
 
+
+@app.route("/api/v1.0/boroughs", methods=["GET"])
+def list_boroughs():
+    return make_response(jsonify(LONDON_BOROUGHS), 200)
 
 @app.route("/api/v1.0/plaques/most-viewed", methods=["GET"])
 def most_viewed():

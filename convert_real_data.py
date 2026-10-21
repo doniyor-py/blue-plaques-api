@@ -24,25 +24,18 @@ import sys
 import requests
 from bson import ObjectId
 
-random.seed(661)                         # same test visits every run
+random.seed(661)                     
 
 RAW_FILE = "london_plaques_raw.json"
 OUT_FILE = "plaques.json"
-CACHE_FILE = "borough_cache.json"        # saves postcodes.io answers so re-runs are fast
+CACHE_FILE = "borough_cache.json"       
 
-BOROUGHS = [
-    "City of London", "Barking and Dagenham", "Barnet", "Bexley", "Brent", "Bromley",
-    "Camden", "Croydon", "Ealing", "Enfield", "Greenwich", "Hackney",
-    "Hammersmith and Fulham", "Haringey", "Harrow", "Havering", "Hillingdon",
-    "Hounslow", "Islington", "Kensington and Chelsea", "Kingston upon Thames",
-    "Lambeth", "Lewisham", "Merton", "Newham", "Redbridge", "Richmond upon Thames",
-    "Southwark", "Sutton", "Tower Hamlets", "Waltham Forest", "Wandsworth", "Westminster",
-]
+from boroughs import LONDON_BOROUGHS as BOROUGHS     # the same 33 names app.py uses
 SHORT_NAMES = {"Kensington": "Kensington and Chelsea", "Chelsea": "Kensington and Chelsea",
                "Hammersmith": "Hammersmith and Fulham", "Fulham": "Hammersmith and Fulham",
                "Richmond": "Richmond upon Thames", "Kingston": "Kingston upon Thames"}
 
-USERNAMES = ["user" + str(i) for i in range(10)]          # match create_users.py
+USERNAMES = ["user" + str(i) for i in range(10)]        
 NOTES = ["Easy to find", "Hidden behind a tree", "Lovely street",
          "Worth the walk", "Plaque needs cleaning", "Great history"]
 
@@ -70,7 +63,7 @@ def lookup_boroughs(points):
     todo = [p for p in points if f"{p[0]},{p[1]}" not in cache]
     print(f"Borough lookup: {len(points) - len(todo)} cached, {len(todo)} to fetch")
 
-    for start in range(0, len(todo), 100):                # the API takes 100 points per request
+    for start in range(0, len(todo), 100):               
         batch = todo[start:start + 100]
         body = {"geolocations": [{"longitude": lng, "latitude": lat, "radius": 1000, "limit": 1}
                                  for lng, lat in batch]}
@@ -128,10 +121,10 @@ def find_people(inscription):
         if STAY_WORDS.search(before) or STAY_WORDS.search(name):
             continue                          # "lived here 1915-1924" is not a lifetime
         if not 15 <= died - born <= 110:
-            continue                          # not a believable lifetime
-        name = re.split(r"(?<=\w{3})\.\s+", name)[-1]   # "Hampstead. Clarkson Stanfield" -> "Clarkson Stanfield"
+            continue                         
+        name = re.split(r"(?<=\w{3})\.\s+", name)[-1]   
         if name.startswith("The "):
-            continue                          # "The Horniman Museum" is a place, not a person
+            continue                          
         for title in TITLES:
             if name.startswith(title):
                 name = name[len(title):]
@@ -171,7 +164,7 @@ def build_people(inscription, subject, category, address):
                   "start": 0, "end": 0}]
 
     if len(found) == 1 and subject:
-        found[0]["name"] = subject.strip()    # the dataset's own name is cleaner
+        found[0]["name"] = subject.strip()    
 
     people = []
     for i, person in enumerate(found):
