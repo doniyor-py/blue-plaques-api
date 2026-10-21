@@ -103,6 +103,21 @@ def password_too_long(password):
     return len(password.encode("utf-8")) > MAX_PASSWORD_BYTES
 
 
+TEXT_LIMITS = {"title": 200, "inscription": 5000, "colour": 30, "organisation": 200,
+               "address": 200, "borough": 50, "category": 50, "note": 500}
+
+
+def get_text(form, fields):
+    values = {}
+    for field in fields:
+        value = form.get(field, "").strip()
+        if len(value) > TEXT_LIMITS[field]:
+            return None, f"{field} must be {TEXT_LIMITS[field]} characters or fewer"
+        values[field] = value
+    return values, None
+
+
+
 def get_pagination():
     try:
         page = int(request.args.get("pn", 1))
@@ -300,9 +315,14 @@ def show_one_plaque(id):
 @jwt_required
 @admin_required
 def add_plaque():
-    required = ["inscription", "colour", "erected_year", "organisation",
-                "address", "borough", "lat", "lng"]
-    missing = [field for field in required if not request.form.get(field)]
+    text, error = get_text(request.form, ["title", "inscription", "colour", "organisation",
+                                          "address", "borough", "category"])
+    if error:
+        return make_response(jsonify({"error": error}), 400)
+
+    required = ["inscription", "colour", "organisation", "address", "borough"]
+    missing = [field for field in required if not text[field]]
+    missing += [field for field in ["erected_year", "lat", "lng"] if not request.form.get(field)]
     if missing:
         return make_response(jsonify({"error": "Missing fields: " + ", ".join(missing)}), 400)
 
@@ -316,7 +336,8 @@ def add_plaque():
     if erected_year < 1800 or erected_year > date.today().year:
         return make_response(jsonify({"error": "erected_year must be between 1800 and 2026"}), 400)
 
-    if request.form["colour"].lower() not in ALLOWED_COLOURS:
+    colour = text["colour"].lower()
+    if colour not in ALLOWED_COLOURS:
         return make_response(jsonify({"error": "colour must be one of: " + ", ".join(ALLOWED_COLOURS)}), 400)
     
     if not (-90 <= lat <= 90) or not (-180 <= lng <= 180):
@@ -324,19 +345,18 @@ def add_plaque():
 
     last = plaques.find_one(sort=[("plaque_ref", -1)])
     next_ref = last["plaque_ref"] + 1 if last else 1
-    colour = request.form["colour"].lower()
-    title = request.form.get("title") or f"{colour.capitalize()} plaque at {request.form['address']}"
-    category = request.form.get("category", "other").lower()
+    title = text["title"] or f"{colour.capitalize()} plaque at {text['address']}"
+    category = text["category"].lower() or "other"
 
     new_plaque = {
         "plaque_ref": next_ref,
         "title": title, 
-        "inscription": request.form["inscription"],
-        "colour": request.form["colour"].lower(),
+        "inscription": text["inscription"],
+        "colour": colour,
         "erected_year": erected_year,
-        "organisation": request.form["organisation"],
-        "address": request.form["address"],
-        "borough": request.form["borough"],
+        "organisation": text["organisation"],
+        "address": text["address"],
+        "borough": text["borough"],
         "category": category,
         "location": {"type": "Point", "coordinates": [lng, lat]},
         "views": 0,
@@ -357,15 +377,19 @@ def edit_plaque(id):
     if not ObjectId.is_valid(id):
         return make_response(jsonify({"error": "Invalid plaque ID"}), 400)
 
-    changes = {}
-    for field in ["title", "inscription", "colour", "organisation", "address", "borough", "category"]:
-        if request.form.get(field):
-            changes[field] = request.form[field]
+    text, error = get_text(request.form, ["title", "inscription", "colour", "organisation",
+                                          "address", "borough", "category"])
+    if error:
+        return make_response(jsonify({"error": error}), 400)
+    changes = {field: value for field, value in text.items() if value}
 
     if "colour" in changes:
         changes["colour"] = changes["colour"].lower()
         if changes["colour"] not in ALLOWED_COLOURS:
             return make_response(jsonify({"error": "colour must be one of: " + ", ".join(ALLOWED_COLOURS)}), 400)
+
+    if "category" in changes:
+        changes["category"] = changes["category"].lower()
 
     if request.form.get("erected_year"):
         try:
@@ -755,6 +779,9 @@ def add_visit(id):
     ratings, error = check_ratings(request.form)
     if error:
         return make_response(jsonify({"error": error}), 400)
+    text, error = get_text(request.form, ["note"])
+    if error:                                                
+        return make_response(jsonify({"error": error}), 400)
 
     today = date.today().isoformat()
     already = plaques.find_one({
@@ -768,7 +795,7 @@ def add_visit(id):
         "_id": ObjectId(),
         "username": g.user["username"],
         "date": today,
-        "note": request.form.get("note", ""),
+        "note": text["note"],
         "ratings": ratings
     }
 
@@ -810,9 +837,13 @@ def edit_visit(id, vid):
     if error:
         return make_response(jsonify({"error": error}), 400)
 
+    text, error = get_text(request.form, ["note"])
+    if error:
+        return make_response(jsonify({"error": error}), 400)
+
     changes = {"visits.$.ratings": ratings}
     if "note" in request.form:
-        changes["visits.$.note"] = request.form["note"]
+        changes["visits.$.note"] = text["note"]
 
     result = plaques.update_one({"_id": ObjectId(id), "visits._id": ObjectId(vid)},
                                 {"$set": changes})
