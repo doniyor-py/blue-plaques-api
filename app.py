@@ -6,7 +6,9 @@ from bson import ObjectId
 from datetime import date, datetime, timedelta, timezone
 from functools import wraps
 from dotenv import load_dotenv
+from werkzeug.exceptions import NotFound
 import os
+import io
 import re
 import jwt
 import bcrypt
@@ -17,6 +19,7 @@ import secrets
 import smtplib
 import requests
 from email.message import EmailMessage
+from PIL import Image, ImageOps, UnidentifiedImageError
 from flask import Flask, make_response, jsonify, request, g, send_from_directory
 
 load_dotenv()
@@ -79,6 +82,7 @@ otps.create_index("expires_at", expireAfterSeconds=0)
 
 users.create_index("username", unique=True)
 users.create_index("email", unique=True)
+blacklist.create_index("token")
 
 plaques.create_index([("location", "2dsphere")])
 plaques.create_index([("views", -1), ("plaque_ref", 1)])     # new: most-viewed sort
@@ -90,6 +94,13 @@ ALLOWED_COLOURS = [
     "pink", "purple", "red", "red and black", "slate", "stone",
     "terracotta", "unknown", "white", "wood", "yellow"
 ]
+
+
+MAX_PASSWORD_BYTES = 72          
+
+
+def password_too_long(password):
+    return len(password.encode("utf-8")) > MAX_PASSWORD_BYTES
 
 
 def get_pagination():
@@ -104,6 +115,9 @@ def get_pagination():
         return None, None, make_response(jsonify({"error": "ps must be between 1 and 100"}), 400)
     return page, size, None
 
+def photo_url(filename):
+    return request.host_url + "api/v1.0/photos/" + filename
+
 
 def clean_plaque(plaque):
     plaque["_id"] = str(plaque["_id"])
@@ -111,6 +125,7 @@ def clean_plaque(plaque):
         visit["_id"] = str(visit["_id"])
     for photo in plaque.get("photos", []):          
         photo["_id"] = str(photo["_id"]) 
+        photo["url"] = photo_url(photo["filename"]) 
     return plaque
 
 
@@ -298,7 +313,7 @@ def add_plaque():
     except ValueError:
         return make_response(jsonify({"error": "erected_year must be a whole number, lat and lng must be numbers"}), 400)
 
-    if erected_year < 1800 or erected_year > 2026:
+    if erected_year < 1800 or erected_year > date.today().year:
         return make_response(jsonify({"error": "erected_year must be between 1800 and 2026"}), 400)
 
     if request.form["colour"].lower() not in ALLOWED_COLOURS:
@@ -357,7 +372,7 @@ def edit_plaque(id):
             erected_year = int(request.form["erected_year"])
         except ValueError:
             return make_response(jsonify({"error": "erected_year must be a whole number"}), 400)
-        if erected_year < 1800 or erected_year > 2026:
+        if erected_year < 1800 or erected_year > date.today().year:
             return make_response(jsonify({"error": "erected_year must be between 1800 and 2026"}), 400)
         changes["erected_year"] = erected_year
 
@@ -439,8 +454,8 @@ def register():
         return make_response(jsonify({"error": "username must be 3-20 letters, numbers or _"}), 400)
     if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email):
         return make_response(jsonify({"error": "A valid email is required"}), 400)
-    if len(password) < 8:
-        return make_response(jsonify({"error": "password must be at least 8 characters"}), 400)
+    if len(password) < 8 or password_too_long(password):
+        return make_response(jsonify({"error": "password must be 8-72 characters"}), 400)
     if users.find_one({"username": username}):
         return make_response(jsonify({"error": "Username already taken"}), 409)
     if users.find_one({"email": email}):
@@ -503,8 +518,8 @@ def reset_password():
     code = request.form.get("code", "").strip()
     new_password = request.form.get("new_password", "")
 
-    if len(new_password) < 8:
-        return make_response(jsonify({"error": "new_password must be at least 8 characters"}), 400)
+    if len(new_password) < 8 or password_too_long(new_password):
+        return make_response(jsonify({"error": "new_password must be 8-72 characters"}), 400)
 
     saved, error = check_otp(email, "reset", code)
     if error:
@@ -525,7 +540,8 @@ def login():
         return make_response(jsonify({"error": "Username and password required (Basic Auth)"}), 401)
 
     user = users.find_one({"username": auth.username})
-    if user is None or not bcrypt.checkpw(auth.password.encode("utf-8"), user["password"]):
+    if (user is None or password_too_long(auth.password)
+            or not bcrypt.checkpw(auth.password.encode("utf-8"), user["password"])):
         return make_response(jsonify({"error": "Wrong username or password"}), 401)
 
     token = jwt.encode({
@@ -555,7 +571,7 @@ def delete_my_account():
         return make_response(jsonify({"error": "Admin accounts cannot be deleted here"}), 403)
 
     password = request.form.get("password", "")
-    if not bcrypt.checkpw(password.encode("utf-8"), user["password"]):
+    if password_too_long(password) or not bcrypt.checkpw(password.encode("utf-8"), user["password"]):
         return make_response(jsonify({"error": "Password is incorrect"}), 401)
 
     remove_user_and_data(user["username"])
@@ -596,6 +612,8 @@ def my_profile():
                           {"_id": 0, "password": 0})
     if user is None:
         return make_response(jsonify({"error": "Account not found"}), 404)
+
+    user["favourites"] = [str(f) for f in user.get("favourites", [])]
     return make_response(jsonify(user), 200)
 
 @app.route("/api/v1.0/users/me/password", methods=["PUT"])
@@ -607,10 +625,10 @@ def change_password():
     user = users.find_one({"username": g.user["username"]})
     if user is None:
         return make_response(jsonify({"error": "Account not found"}), 404)
-    if not bcrypt.checkpw(old_password.encode("utf-8"), user["password"]):
+    if password_too_long(old_password) or not bcrypt.checkpw(old_password.encode("utf-8"), user["password"]):
         return make_response(jsonify({"error": "Old password is incorrect"}), 401)
-    if len(new_password) < 8:
-        return make_response(jsonify({"error": "new_password must be at least 8 characters"}), 400)
+    if len(new_password) < 8 or password_too_long(new_password):
+        return make_response(jsonify({"error": "new_password must be 8-72 characters"}), 400)
     if new_password == old_password:
         return make_response(jsonify({"error": "New password must be different from the old one"}), 400)
 
@@ -632,7 +650,7 @@ def list_users():
         return error
 
     total = users.count_documents({})
-    data_to_return = list(users.find({}, {"_id": 0, "password": 0})
+    data_to_return = list(users.find({}, {"_id": 0, "password": 0, "favourites": 0})
                           .sort("username", 1).skip((page - 1) * size).limit(size))
     return make_response(jsonify({
         "total": total,
@@ -907,12 +925,9 @@ def my_stats():
 @app.route("/api/v1.0/analytics/decades", methods=["GET"])
 def decade_stats():
     pipeline = [
-        {"$match": {"erected_year": {"$ne": None}}},
+        {"$match": {"erected_year": {"$type": "number"}}},
         {"$group": {
-            "_id": {"$multiply": [
-                {"$floor": {"$divide": ["$erected_year", 10]}},
-                10
-            ]},
+            "_id": {"$subtract": ["$erected_year", {"$mod": ["$erected_year", 10]}]},
             "plaques": {"$sum": 1}
         }},
         {"$sort": {"_id": 1}},
@@ -1273,16 +1288,24 @@ def search_plaques():
 
 # ===================== PHOTOS (sub-documents + image files) =====================
 
-def image_type(data):
-    """Look at the first bytes of the file to see what it really is."""
-    if data.startswith(b"\xff\xd8\xff"):
-        return "jpg"
-    if data.startswith(b"\x89PNG\r\n\x1a\n"):
-        return "png"
-    if data[:4] == b"RIFF" and data[8:12] == b"WEBP":
-        return "webp"
-    return None
+MAX_PHOTO_SIDE = 1600                  # longest side in pixels after resizing
+Image.MAX_IMAGE_PIXELS = 40_000_000     # refuse giant images that could exhaust memory
 
+
+def clean_image(data):
+    """Open the upload with Pillow and return a fresh JPEG with no hidden data, or None."""
+    try:
+        with Image.open(io.BytesIO(data)) as img:
+            if img.format not in ("JPEG", "PNG", "WEBP"):
+                return None
+            img = ImageOps.exif_transpose(img)                  # keep phone photos the right way up
+            img.thumbnail((MAX_PHOTO_SIDE, MAX_PHOTO_SIDE))      # shrink, keeping the shape
+            img = img.convert("RGB")                             # JPEG has no transparency
+            output = io.BytesIO()
+            img.save(output, "JPEG", quality=85)                 # new file: EXIF and GPS are not copied
+            return output.getvalue()
+    except (UnidentifiedImageError, Image.DecompressionBombError, OSError, ValueError):
+        return None
 
 def delete_photo_file(photo):
     path = os.path.join(UPLOAD_FOLDER, photo["filename"])
@@ -1303,9 +1326,8 @@ def add_photo(id):
     if file is None or file.filename == "":
         return make_response(jsonify({"error": "Attach an image in the 'photo' field"}), 400)
 
-    data = file.read()
-    kind = image_type(data)
-    if kind is None:
+    cleaned = clean_image(file.read())
+    if cleaned is None:
         return make_response(jsonify({"error": "Photo must be a JPG, PNG or WEBP image"}), 400)
 
     caption = request.form.get("caption", "").strip()
@@ -1313,14 +1335,13 @@ def add_photo(id):
         return make_response(jsonify({"error": "caption must be 200 characters or fewer"}), 400)
 
     photo_id = ObjectId()
-    filename = str(photo_id) + "." + kind
+    filename = str(photo_id) + ".jpg"
     with open(os.path.join(UPLOAD_FOLDER, filename), "wb") as f:
-        f.write(data)
+        f.write(cleaned)
 
     new_photo = {
         "_id": photo_id,
         "filename": filename,
-        "url": request.host_url + "api/v1.0/photos/" + filename,
         "caption": caption,
         "username": g.user["username"],
         "uploaded": date.today().isoformat()
@@ -1328,6 +1349,7 @@ def add_photo(id):
     plaques.update_one({"_id": ObjectId(id)}, {"$push": {"photos": new_photo}})
 
     new_photo["_id"] = str(photo_id)
+    new_photo["url"] = photo_url(filename)
     return make_response(jsonify(new_photo), 201)
 
 
@@ -1342,13 +1364,19 @@ def get_photos(id):
     data_to_return = []
     for photo in plaque.get("photos", []):
         photo["_id"] = str(photo["_id"])
+        photo["url"] = photo_url(photo["filename"])
         data_to_return.append(photo)
     return make_response(jsonify(data_to_return), 200)
 
 
 @app.route("/api/v1.0/photos/<string:filename>", methods=["GET"])
 def show_photo_file(filename):
-    return send_from_directory(UPLOAD_FOLDER, filename)
+    try:
+        response = send_from_directory(UPLOAD_FOLDER, filename)
+    except NotFound:
+        return make_response(jsonify({"error": "Photo not found"}), 404)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    return response
 
 
 @app.route("/api/v1.0/plaques/<string:id>/photos/<string:pid>", methods=["DELETE"])
@@ -1375,4 +1403,4 @@ def delete_photo(id, pid):
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5001)
+    app.run(debug=os.getenv("FLASK_DEBUG") == "1", port=5001)
