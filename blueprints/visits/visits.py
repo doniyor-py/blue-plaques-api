@@ -6,14 +6,16 @@ from flask import Blueprint, request, make_response, jsonify, g
 
 from globals import plaques
 from decorators import jwt_required
-from helpers import get_text
+from helpers import get_text, get_pagination, page_info
 
 visits_bp = Blueprint("visits_bp", __name__)
 
 
-def check_ratings(form):
+def check_ratings(form, partial=False):
     ratings = {}
     for name in ["history", "condition", "accessibility"]:
+        if partial and name not in form:
+            continue
         try:
             value = int(form[name])
         except (KeyError, ValueError):
@@ -36,18 +38,39 @@ def visit_owner_check(id, vid):
     return make_response(jsonify({"error": "Visit not found"}), 404)
 
 
+VISIT_SORT_OPTIONS = {"date": "date", "rating": "overall"}
+
 @visits_bp.route("/api/v1.0/plaques/<string:id>/visits", methods=["GET"])
 def get_all_visits(id):
-    if not ObjectId.is_valid(id):
-        return make_response(jsonify({"error": "Invalid plaque ID"}), 400)
+    page, size, error = get_pagination()
+    if error:
+        return error
+    sort_by = request.args.get("sort", "date")
+    if sort_by not in VISIT_SORT_OPTIONS:
+        return make_response(jsonify({"error": "sort must be one of: " + ", ".join(VISIT_SORT_OPTIONS)}), 400)
+    direction = 1 if request.args.get("order") == "asc" else -1
 
-    plaque = plaques.find_one({"_id": ObjectId(id)}, {"visits": 1, "_id": 0})
+    plaque = plaques.find_one({"_id": ObjectId(id)}, {"visits._id": 1})
     if plaque is None:
         return make_response(jsonify({"error": "Plaque not found"}), 404)
+    total = len(plaque.get("visits", []))
 
-    for visit in plaque["visits"]:
+    pipeline = [
+        {"$match": {"_id": ObjectId(id)}},
+        {"$unwind": "$visits"},
+        {"$replaceRoot": {"newRoot": "$visits"}},
+        {"$addFields": {"overall": {"$round": [{"$avg": [
+            "$ratings.history", "$ratings.condition", "$ratings.accessibility"]}, 2]}}},
+        {"$sort": {VISIT_SORT_OPTIONS[sort_by]: direction, "_id": 1}},
+        {"$skip": (page - 1) * size},
+        {"$limit": size}
+    ]
+    data_to_return = []
+    for visit in plaques.aggregate(pipeline):
         visit["_id"] = str(visit["_id"])
-    return make_response(jsonify(plaque["visits"]), 200)
+        data_to_return.append(visit)
+
+    return make_response(jsonify({**page_info(total, page, size), "visits": data_to_return}), 200)
 
 
 @visits_bp.route("/api/v1.0/plaques/<string:id>/visits", methods=["POST"])
@@ -113,7 +136,7 @@ def edit_visit(id, vid):
     if error:
         return error
 
-    ratings, error = check_ratings(request.form)
+    ratings, error = check_ratings(request.form, partial=True)
     if error:
         return make_response(jsonify({"error": error}), 400)
 
@@ -121,9 +144,11 @@ def edit_visit(id, vid):
     if error:
         return make_response(jsonify({"error": error}), 400)
 
-    changes = {"visits.$.ratings": ratings}
+    changes = {"visits.$.ratings." + name: value for name, value in ratings.items()}
     if "note" in request.form:
         changes["visits.$.note"] = text["note"]
+    if not changes:
+        return make_response(jsonify({"error": "Send at least one of: history, condition, accessibility, note"}), 400)
 
     result = plaques.update_one({"_id": ObjectId(id), "visits._id": ObjectId(vid)},
                                 {"$set": changes})

@@ -1,5 +1,4 @@
 """Accounts: profile, password, deleting accounts, admin user list, favourites, personal stats."""
-import math
 from datetime import datetime, timezone
 
 import bcrypt
@@ -8,7 +7,7 @@ from flask import Blueprint, request, make_response, jsonify, g
 
 from globals import plaques, users, blacklist
 from decorators import jwt_required, admin_required
-from helpers import password_too_long, get_pagination, delete_photo_file
+from helpers import password_too_long, get_pagination, delete_photo_file, page_info
 
 users_bp = Blueprint("users_bp", __name__)
 
@@ -104,12 +103,7 @@ def list_users():
     total = users.count_documents({})
     data_to_return = list(users.find({}, {"_id": 0, "password": 0, "favourites": 0})
                           .sort("username", 1).skip((page - 1) * size).limit(size))
-    return make_response(jsonify({
-        "total": total,
-        "page": page,
-        "pages": math.ceil(total / size),
-        "users": data_to_return
-    }), 200)
+    return make_response(jsonify({**page_info(total, page, size), "users": data_to_return}), 200)
 
 
 @users_bp.route("/api/v1.0/users/me/favourites/<string:id>", methods=["POST"])

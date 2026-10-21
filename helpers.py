@@ -1,4 +1,5 @@
 """Small helpers used by several blueprints."""
+import math
 import os
 from flask import request, make_response, jsonify
 from globals import UPLOAD_FOLDER
@@ -43,6 +44,9 @@ def get_pagination():
     if size < 1 or size > 100:
         return None, None, make_response(jsonify({"error": "ps must be between 1 and 100"}), 400)
     return page, size, None
+
+def page_info(total, page, size):
+    return {"total": total, "page": page, "page_size": size, "pages": math.ceil(total / size)}
 
 
 def photo_url(filename):

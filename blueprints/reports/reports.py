@@ -1,5 +1,4 @@
 """Reports: users report a problem with a plaque, admins review them."""
-import math
 from datetime import datetime, timezone
 
 from bson import ObjectId
@@ -8,7 +7,7 @@ from flask import Blueprint, request, make_response, jsonify, g
 from globals import plaques, reports
 from decorators import jwt_required, admin_required, current_username
 from extensions import limiter
-from helpers import get_pagination
+from helpers import get_pagination, page_info
 
 reports_bp = Blueprint("reports_bp", __name__)
 
@@ -75,12 +74,7 @@ def list_reports():
     total = reports.count_documents(query)
     data_to_return = [clean_report(r) for r in
                       reports.find(query).sort("created", -1).skip((page - 1) * size).limit(size)]
-    return make_response(jsonify({
-        "total": total,
-        "page": page,
-        "pages": math.ceil(total / size),
-        "reports": data_to_return
-    }), 200)
+    return make_response(jsonify({**page_info(total, page, size), "reports": data_to_return}), 200)
 
 
 @reports_bp.route("/api/v1.0/reports/<string:rid>", methods=["PUT"])

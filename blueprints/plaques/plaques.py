@@ -1,5 +1,4 @@
 """Plaques: list, view, create, edit, delete, nearby, random, most viewed and search."""
-import math
 import re
 from datetime import date
 
@@ -11,7 +10,7 @@ from pymongo.errors import DuplicateKeyError
 from boroughs import LONDON_BOROUGHS, find_borough
 from globals import plaques, users, reports
 from decorators import jwt_required, admin_required
-from helpers import ALLOWED_COLOURS, get_text, get_pagination, clean_plaque, delete_photo_file
+from helpers import ALLOWED_COLOURS, get_text, get_pagination, clean_plaque, delete_photo_file, page_info
 
 plaques_bp = Blueprint("plaques_bp", __name__)
 
@@ -27,13 +26,7 @@ def show_all_plaques():
     for plaque in plaques.find().sort("plaque_ref", 1).skip((page - 1) * size).limit(size):
         data_to_return.append(clean_plaque(plaque))
 
-    return make_response(jsonify({
-        "total": total,
-        "page": page,
-        "page_size": size,
-        "pages": math.ceil(total / size),
-        "plaques": data_to_return
-    }), 200)
+    return make_response(jsonify({**page_info(total, page, size), "plaques": data_to_return}), 200)
 
 
 @plaques_bp.route("/api/v1.0/plaques/<string:id>", methods=["GET"])
@@ -378,9 +371,4 @@ def search_plaques():
                    .skip((page - 1) * size).limit(size)):
         data_to_return.append(clean_plaque(plaque))
 
-    return make_response(jsonify({
-        "total": total,
-        "page": page,
-        "pages": math.ceil(total / size),
-        "plaques": data_to_return
-    }), 200)
+    return make_response(jsonify({**page_info(total, page, size), "plaques": data_to_return}), 200)
