@@ -1,4 +1,4 @@
-from flask import Flask, make_response, jsonify, request, g
+from flask import Flask, make_response, jsonify, request, g, send_from_directory
 from flask_cors import CORS
 from pymongo import MongoClient, ReturnDocument
 from pymongo.errors import DuplicateKeyError
@@ -21,7 +21,6 @@ import requests
 from email.message import EmailMessage
 from PIL import Image, ImageOps, UnidentifiedImageError
 from boroughs import LONDON_BOROUGHS, find_borough
-from flask import Flask, make_response, jsonify, request, g, send_from_directory
 
 load_dotenv()
 SECRET_KEY = os.getenv("SECRET_KEY")

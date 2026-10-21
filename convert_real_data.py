@@ -13,7 +13,7 @@ Derived            : people[].born / died  (read from the inscription, e.g. "190
 App data           : views, photos, visits (seeded TEST check-ins for the demo)
 
 Run:  python convert_real_data.py              (looks up boroughs online)
-      python convert_real_data.py --offline    (address matching only, no internet)
+      python convert_real_data.py --offline    (cache + address matching, no internet)
 """
 import json
 import os
@@ -53,7 +53,7 @@ def borough_from_address(address):
     return None
 
 
-def lookup_boroughs(points):
+def lookup_boroughs(points, offline=False):
     """Ask postcodes.io for the local authority of each (lng, lat). Returns {"lng,lat": name}."""
     cache = {}
     if os.path.exists(CACHE_FILE):
@@ -61,6 +61,9 @@ def lookup_boroughs(points):
             cache = json.load(f)
 
     todo = [p for p in points if f"{p[0]},{p[1]}" not in cache]
+    if offline:
+        print(f"Offline: {len(points) - len(todo)} boroughs from the cache, {len(todo)} will use the address")
+        return cache
     print(f"Borough lookup: {len(points) - len(todo)} cached, {len(todo)} to fetch")
 
     for start in range(0, len(todo), 100):               
@@ -240,8 +243,7 @@ if __name__ == "__main__":
 
     points = [(float(r["lng"]), float(r["lat"])) for r in raw_plaques
               if r.get("lat") not in (None, "") and r.get("lng") not in (None, "")]
-    lookup = {} if "--offline" in sys.argv else lookup_boroughs(points)
-
+    lookup = lookup_boroughs(points, offline="--offline" in sys.argv)
     converted = [p for p in (convert(r, lookup) for r in raw_plaques) if p]
     converted = [p for p in converted if p["borough"] in BOROUGHS]   # Greater London only
     with open(OUT_FILE, "w", encoding="utf-8") as f:
