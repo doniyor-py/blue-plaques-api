@@ -188,15 +188,14 @@ def delete_plaque(id):
     if not ObjectId.is_valid(id):
         return make_response(jsonify({"error": "Invalid plaque ID"}), 400)
 
-    plaque = plaques.find_one({"_id": ObjectId(id)}, {"photos": 1})
+    plaque = plaques.find_one_and_delete({"_id": ObjectId(id)}, {"photos": 1})
     if plaque is None:
         return make_response(jsonify({"error": "Plaque not found"}), 404)
 
-    for photo in plaque.get("photos", []):       
+    for photo in plaque.get("photos", []):
         delete_photo_file(photo)
-    plaques.delete_one({"_id": ObjectId(id)})
-    reports.delete_many({"plaque_id": ObjectId(id)})                      
-    users.update_many({}, {"$pull": {"favourites": ObjectId(id)}})        
+    reports.delete_many({"plaque_id": ObjectId(id)})
+    users.update_many({"favourites": ObjectId(id)}, {"$pull": {"favourites": ObjectId(id)}})     
 
     return make_response(jsonify({}), 204)
 

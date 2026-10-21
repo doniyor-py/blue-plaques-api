@@ -18,6 +18,7 @@ photos_bp = Blueprint("photos_bp", __name__)
 
 MAX_PHOTO_SIDE = 1600                  # longest side in pixels after resizing
 
+MAX_PHOTOS = 10                         # most photos one plaque can have
 MAX_PIXELS = 40_000_000                 # largest image we accept (width x height)
 Image.MAX_IMAGE_PIXELS = MAX_PIXELS     # Pillow's own safety net
 
@@ -46,8 +47,11 @@ def clean_image(data):
 def add_photo(id):
     if not ObjectId.is_valid(id):
         return make_response(jsonify({"error": "Invalid plaque ID"}), 400)
-    if not plaques.find_one({"_id": ObjectId(id)}, {"_id": 1}):
+    plaque = plaques.find_one({"_id": ObjectId(id)}, {"photos._id": 1})
+    if plaque is None:
         return make_response(jsonify({"error": "Plaque not found"}), 404)
+    if len(plaque.get("photos", [])) >= MAX_PHOTOS:                 # quick check before the slow image work
+        return make_response(jsonify({"error": f"This plaque already has {MAX_PHOTOS} photos"}), 409)
 
     file = request.files.get("photo")
     if file is None or file.filename == "":
@@ -63,7 +67,8 @@ def add_photo(id):
 
     photo_id = ObjectId()
     filename = str(photo_id) + ".jpg"
-    with open(os.path.join(UPLOAD_FOLDER, filename), "wb") as f:
+    path = os.path.join(UPLOAD_FOLDER, filename)
+    with open(path, "wb") as f:
         f.write(cleaned)
 
     new_photo = {
@@ -73,7 +78,11 @@ def add_photo(id):
         "username": g.user["username"],
         "uploaded": date.today().isoformat()
     }
-    plaques.update_one({"_id": ObjectId(id)}, {"$push": {"photos": new_photo}})
+    result = plaques.update_one({"_id": ObjectId(id), f"photos.{MAX_PHOTOS - 1}": {"$exists": False}},
+                                {"$push": {"photos": new_photo}})
+    if result.matched_count == 0:
+        os.remove(path)                                          
+        return make_response(jsonify({"error": f"Plaque not found or already has {MAX_PHOTOS} photos"}), 409)
 
     new_photo["_id"] = str(photo_id)
     new_photo["url"] = photo_url(filename)

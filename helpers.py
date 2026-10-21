@@ -61,5 +61,7 @@ def clean_plaque(plaque):
 
 def delete_photo_file(photo):
     path = os.path.join(UPLOAD_FOLDER, photo["filename"])
-    if os.path.exists(path):
+    try:
         os.remove(path)
+    except FileNotFoundError:
+        pass
