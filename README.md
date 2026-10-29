@@ -24,7 +24,7 @@ Built with **Python Flask** and **MongoDB** for COM661 Full Stack Strategies and
 
 | Area | Technology |
 |---|---|
-| Language | Python 3.9+ |
+| Language | Python 3.11+ |
 | Web framework | Flask, Flask Blueprints, Flask-CORS, Flask-Limiter |
 | Database | MongoDB 7 with PyMongo |
 | Authentication | JWT (PyJWT), bcrypt password hashing |
@@ -65,7 +65,7 @@ blue-plaques-api/
 
 ## Setup
 
-You need **Python 3.9+** and **MongoDB** (with the MongoDB Database Tools for `mongoimport`).
+You need **Python 3.11+** and **MongoDB** (with the MongoDB Database Tools for `mongoimport`).
 
 ### 1. Install
 
@@ -215,7 +215,7 @@ All routes start with `/api/v1.0` except `/`. **User** means any logged-in accou
 
 ---
 
-## Example requests
+## Usage
 
 ```bash
 # search: literature plaques in Camden for people alive in 1900
@@ -239,6 +239,20 @@ curl -X POST -H "x-access-token: $TOKEN" -F history=5 -F condition=4 -F accessib
 - **Test data:** the `visits`, ratings and `views` in `plaques.json` are generated for testing. Photos start empty.
 
 To rebuild `plaques.json` from the raw file: `python convert_real_data.py` (add `--offline` to use only the cache).
+
+---
+
+## Security
+
+- Passwords and one-time codes are hashed with bcrypt; plain passwords are never stored.
+- Logins return a JWT signed with `SECRET_KEY` (32+ random characters, checked at startup) that expires after 30 minutes. Logout, password changes and account deletion invalidate older tokens.
+- Admin-only routes are protected by `@admin_required`; users can only edit or delete their own visits and photos.
+- Sign-up uses a Cloudflare Turnstile human check and an emailed 6-digit code (10-minute expiry, 5 attempts, single use). Password reset gives the same reply whether or not the email exists.
+- Rate limits on login, sign-up, codes, photo uploads and reports.
+- All input is validated (types, ranges, lengths, IDs, boroughs, colours); errors return JSON with a 4xx status.
+- Uploaded images are re-encoded with Pillow, which removes location data (EXIF/GPS), and are limited in size, pixels and number per plaque.
+- Secrets live in `.env`, which is excluded from Git; `.env.example` contains no real values.
+- Dependencies are pinned in `requirements.txt` and checked with `pip-audit`.
 
 ---
 
