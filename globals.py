@@ -1,4 +1,4 @@
-"""Values shared by every file: settings from .env, and the MongoDB connection (BE09 9.2.2)."""
+"""Values shared by every file: settings from .env, and the MongoDB connection."""
 import os
 from dotenv import load_dotenv
 from pymongo import MongoClient
@@ -10,7 +10,7 @@ if not SECRET_KEY or len(SECRET_KEY) < 32 or SECRET_KEY.startswith("change-"):
                      'python -c "import secrets; print(secrets.token_hex(32))"')
 
 TURNSTILE_SECRET = os.getenv("TURNSTILE_SECRET")          # Cloudflare human check
-EMAIL_MODE = os.getenv("EMAIL_MODE", "console")           # "console" (CW1) or "smtp" (CW2)
+EMAIL_MODE = os.getenv("EMAIL_MODE", "console")           # "console" or "smtp"
 SMTP_USER = os.getenv("SMTP_USER")                        # only needed for "smtp"
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
 

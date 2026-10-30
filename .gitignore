@@ -2,5 +2,6 @@ venv/
 .env
 .DS_Store
 uploads/
-__pycache__/db_export/
+__pycache__/
+db_export/
 db_export.zip
