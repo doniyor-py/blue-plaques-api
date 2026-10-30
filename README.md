@@ -2,7 +2,7 @@
 
 A REST API for exploring London's commemorative plaques: who lived where, when, and what visitors think of them today.
 
-Built with **Python Flask** and **MongoDB** for COM661 Full Stack Strategies and Development (Coursework 1, back end).
+Built with **Python Flask** and **MongoDB**: 3,375 real plaques, searchable by text, place, year and person, with check-ins, ratings, photos and analytics.
 
 ---
 
@@ -267,4 +267,6 @@ To rebuild `plaques.json` from the raw file: `python convert_real_data.py` (add 
 
 ## Author
 
-Doniyor Mekhmonov, BSc (Hons) Computing Systems, Ulster University London.
+**Doniyor Mekhmonov** · [github.com/doniyor-py](https://github.com/doniyor-py)
+
+Plaque data © [Open Plaques](https://openplaques.org) contributors, public domain.
