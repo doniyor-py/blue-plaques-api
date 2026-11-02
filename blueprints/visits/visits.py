@@ -45,6 +45,8 @@ def get_all_visits(id):
     page, size, error = get_pagination()
     if error:
         return error
+    if not ObjectId.is_valid(id):                                        
+        return make_response(jsonify({"error": "Invalid plaque ID"}), 400)
     sort_by = request.args.get("sort", "date")
     if sort_by not in VISIT_SORT_OPTIONS:
         return make_response(jsonify({"error": "sort must be one of: " + ", ".join(VISIT_SORT_OPTIONS)}), 400)
