@@ -127,7 +127,7 @@ The API runs at **http://127.0.0.1:5001**. Indexes are created automatically on 
 
 ## Front end
 
-The Angular front end for this API (COM661 Coursework 2) is in a separate repository:
+The Angular front end for this API is in a separate repository:
 [github.com/doniyor-py/blue-plaques-fe](https://github.com/doniyor-py/blue-plaques-fe)
 
 Start this API first, then follow the front end's README (`npm install`, then `npm start`) and open http://localhost:4200.
