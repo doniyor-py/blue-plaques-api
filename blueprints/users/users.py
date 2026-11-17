@@ -129,7 +129,8 @@ def get_favourites():
 
     data_to_return = []
     for plaque in plaques.find({"_id": {"$in": ids}},
-                               {"inscription": 1, "borough": 1, "colour": 1, "location": 1, "views": 1}):
+                               {"title": 1, "inscription": 1, "borough": 1, "colour": 1, "location": 1, "views": 1,
+                                   "inscription": 1, "borough": 1, "colour": 1, "location": 1, "views": 1}):
         plaque["_id"] = str(plaque["_id"])
         data_to_return.append(plaque)
     return make_response(jsonify(data_to_return), 200)

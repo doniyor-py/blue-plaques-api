@@ -245,6 +245,7 @@ def plaques_nearby():
         }},
         {"$limit": limit},
         {"$project": {
+            "title": 1, "inscription": 1, "borough": 1, "colour": 1, "location": 1, "views": 1,
             "inscription": 1, "borough": 1, "colour": 1, "location": 1, "views": 1,
             "distance_m": {"$round": ["$distance_m", 0]},
             "walking_minutes": {"$ceil": {"$divide": ["$distance_m", 80]}}
