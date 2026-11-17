@@ -84,6 +84,8 @@ cp .env.example .env
 python -c "import secrets; print(secrets.token_hex(32))"
 ```
 
+On Windows use `copy .env.example .env`, and `py` instead of `python3` when creating the virtual environment.
+
 Paste the printed value after `SECRET_KEY=` in `.env`. The app refuses to start with a missing or weak key.
 
 | Setting | Meaning |
@@ -96,13 +98,20 @@ Paste the printed value after `SECRET_KEY=` in `.env`. The app refuses to start 
 
 ### 3. Database
 
-Start MongoDB, then load the data and the test accounts:
+Start MongoDB. Skip this if it already runs as a service (for example installed with the Windows installer, or started with `brew services start mongodb-community` on a Mac):
 
 ```bash
 mongod --dbpath ~/data/db --fork --logpath ~/data/mongod.log
+```
+
+Load the data and the test accounts:
+
+```bash
 mongoimport --db plaquesDB --collection plaques --file plaques.json --jsonArray --drop
 python create_users.py
 ```
+
+No `mongoimport`? In MongoDB Compass, connect to `mongodb://localhost:27017`, create the database `plaquesDB` with the collection `plaques`, then choose Add Data → Import JSON or CSV file → `plaques.json`.
 
 > `create_users.py` **deletes all existing users** before creating the test accounts.
 
@@ -113,6 +122,15 @@ python app.py
 ```
 
 The API runs at **http://127.0.0.1:5001**. Indexes are created automatically on startup.
+
+---
+
+## Front end
+
+The Angular front end for this API (COM661 Coursework 2) is in a separate repository:
+[github.com/doniyor-py/blue-plaques-fe](https://github.com/doniyor-py/blue-plaques-fe)
+
+Start this API first, then follow the front end's README (`npm install`, then `npm start`) and open http://localhost:4200.
 
 ---
 
