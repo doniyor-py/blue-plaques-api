@@ -22,6 +22,7 @@ def register():
     username = request.form.get("username", "").strip().lower()
     email = request.form.get("email", "").strip().lower()
     password = request.form.get("password", "")
+    accept_terms = request.form.get("accept_terms", "").lower()
 
     # 1. check the input (free, so it runs first)
     if not re.fullmatch(r"[a-z0-9_]{3,20}", username):
@@ -31,6 +32,9 @@ def register():
     if len(password) < 8 or password_too_long(password):
         return make_response(jsonify({"error": "password must be 8-72 characters"}), 400)
 
+    if accept_terms != "true":
+        return make_response(jsonify({"error": "You must accept the terms of use and privacy policy"}), 400)
+    
     # 2. are you human? (asks Cloudflare, so only once the input is valid)
     if not is_human(request.form.get("captcha_token")):
         return make_response(jsonify({"error": "Human check failed, please try again"}), 400)
@@ -43,7 +47,11 @@ def register():
 
     # 4. remember the details with the code, and email the code
     hashed = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
-    code = create_otp(email, "register", {"username": username, "password": hashed})
+    code = create_otp(email, "register", {
+        "username": username,
+        "password": hashed,
+        "terms_accepted_at": datetime.now(timezone.utc)      # proof of when they agreed
+    })
     send_email(email, "Your Blue Plaques sign-up code",
                f"Your code is {code}. It expires in 10 minutes.")
 
@@ -68,6 +76,7 @@ def register_verify():
             "username": saved["data"]["username"],
             "email": email,
             "password": saved["data"]["password"],
+            "terms_accepted_at": saved["data"].get("terms_accepted_at"),
             "admin": False             # new accounts are never admins
         })
     except DuplicateKeyError:          # someone took the name while you were checking email
@@ -119,11 +128,17 @@ def login():
     if not auth or not auth.username or not auth.password:
         return make_response(jsonify({"error": "Username and password required (Basic Auth)"}), 401)
 
-    user = users.find_one({"username": auth.username.strip().lower()})
+    # people can log in with their email or their username
+    identifier = auth.username.strip().lower()
+    if "@" in identifier:
+        user = users.find_one({"email": identifier})
+    else:
+        user = users.find_one({"username": identifier})
+
     if (user is None or password_too_long(auth.password)
             or not bcrypt.checkpw(auth.password.encode("utf-8"), user["password"])):
-        return make_response(jsonify({"error": "Wrong username or password"}), 401)
-
+        return make_response(jsonify({"error": "Wrong email, username or password"}), 401)
+    
     token = jwt.encode({
         "username": user["username"],
         "admin": user.get("admin", False),
