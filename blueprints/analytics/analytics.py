@@ -89,6 +89,7 @@ def top_rated():
         {"$unwind": "$visits"},
         {"$group": {
             "_id": "$_id",
+            "title": {"$first": "$title"},
             "inscription": {"$first": "$inscription"},
             "borough": {"$first": "$borough"},
             "visits": {"$sum": 1},
@@ -103,6 +104,7 @@ def top_rated():
         {"$limit": limit},
         {"$project": {
             "_id": 0,
+            "title": 1,
             "plaque_id": {"$toString": "$_id"},
             "inscription": 1,
             "borough": 1,
