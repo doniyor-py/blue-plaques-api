@@ -32,6 +32,7 @@ def borough_stats():
 def rating_stats():
     pipeline = [
         {"$unwind": "$visits"},
+        {"$match": {"visits.ratings": {"$exists": True}}},
         {"$group": {
             "_id": "$borough",
             "visits": {"$sum": 1},
@@ -87,6 +88,7 @@ def top_rated():
 
     pipeline = [
         {"$unwind": "$visits"},
+        {"$match": {"visits.ratings": {"$exists": True}}},
         {"$group": {
             "_id": "$_id",
             "title": {"$first": "$title"},

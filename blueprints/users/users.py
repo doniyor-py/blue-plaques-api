@@ -129,8 +129,7 @@ def get_favourites():
 
     data_to_return = []
     for plaque in plaques.find({"_id": {"$in": ids}},
-                               {"title": 1, "inscription": 1, "borough": 1, "colour": 1, "location": 1, "views": 1,
-                                   "inscription": 1, "borough": 1, "colour": 1, "location": 1, "views": 1}):
+                               {"title": 1, "inscription": 1, "borough": 1, "colour": 1, "location": 1, "views": 1}):
         plaque["_id"] = str(plaque["_id"])
         data_to_return.append(plaque)
     return make_response(jsonify(data_to_return), 200)
@@ -180,6 +179,49 @@ def my_stats():
         return make_response(jsonify({"visits": 0, "avg_rating_given": None,
                                       "boroughs": [], "boroughs_visited": 0}), 200)
     return make_response(jsonify(results[0]), 200)
+
+
+@users_bp.route("/api/v1.0/users/me/visits", methods=["GET"])
+@jwt_required
+def my_visits():
+    """Every plaque you have visited, newest first, with your review if you left one.
+    ?reviewed=true returns only the visits you reviewed."""
+    page, size, error = get_pagination()
+    if error:
+        return error
+    username = g.user["username"]
+
+    mine = {"visits.username": username}
+    if request.args.get("reviewed") == "true":
+        mine["visits.ratings"] = {"$exists": True}
+
+    pipeline = [
+        {"$match": {"visits.username": username}},     # only plaques you visited
+        {"$unwind": "$visits"},
+        {"$match": mine},                              # only your visits on those plaques
+        {"$sort": {"visits.date": -1, "visits._id": -1}},
+        {"$facet": {                                   # one query gives the total and one page
+            "total": [{"$count": "count"}],
+            "visits": [
+                {"$skip": (page - 1) * size},
+                {"$limit": size},
+                {"$project": {
+                    "_id": 0,
+                    "visit_id": {"$toString": "$visits._id"},
+                    "plaque_id": {"$toString": "$_id"},
+                    "title": 1,
+                    "borough": 1,
+                    "colour": 1,
+                    "date": "$visits.date",
+                    "ratings": "$visits.ratings",
+                    "note": "$visits.note"
+                }}
+            ]
+        }}
+    ]
+    result = list(plaques.aggregate(pipeline))[0]
+    total = result["total"][0]["count"] if result["total"] else 0
+    return make_response(jsonify({**page_info(total, page, size), "visits": result["visits"]}), 200)
 
 
 @users_bp.route("/api/v1.0/users/me/progress", methods=["GET"])

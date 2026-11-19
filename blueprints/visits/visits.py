@@ -1,4 +1,4 @@
-"""Visits: check-ins with ratings, stored as sub-documents inside each plaque."""
+"""Visits: check-ins with an optional review (ratings and a note), stored as sub-documents inside each plaque."""
 from datetime import date
 
 from bson import ObjectId
@@ -11,9 +11,12 @@ from helpers import get_text, get_pagination, page_info
 visits_bp = Blueprint("visits_bp", __name__)
 
 
+RATING_NAMES = ["history", "condition", "accessibility"]
+
+
 def check_ratings(form, partial=False):
     ratings = {}
-    for name in ["history", "condition", "accessibility"]:
+    for name in RATING_NAMES:
         if partial and name not in form:
             continue
         try:
@@ -27,15 +30,16 @@ def check_ratings(form, partial=False):
 
 
 def visit_owner_check(id, vid):
+    """Return (visit, None) if you may change this visit, otherwise (None, error response)."""
     plaque = plaques.find_one({"_id": ObjectId(id)}, {"visits": 1})
     if plaque is None:
-        return make_response(jsonify({"error": "Plaque not found"}), 404)
-    for visit in plaque["visits"]:
+        return None, make_response(jsonify({"error": "Plaque not found"}), 404)
+    for visit in plaque.get("visits", []):
         if visit["_id"] == ObjectId(vid):
             if visit["username"] != g.user["username"] and not g.user.get("admin"):
-                return make_response(jsonify({"error": "You can only change your own visits"}), 403)
-            return None     
-    return make_response(jsonify({"error": "Visit not found"}), 404)
+                return None, make_response(jsonify({"error": "You can only change your own visits"}), 403)
+            return visit, None
+    return None, make_response(jsonify({"error": "Visit not found"}), 404)
 
 
 VISIT_SORT_OPTIONS = {"date": "date", "rating": "overall"}
@@ -81,11 +85,14 @@ def add_visit(id):
     if not ObjectId.is_valid(id):
         return make_response(jsonify({"error": "Invalid plaque ID"}), 400)
 
-    ratings, error = check_ratings(request.form)
-    if error:
-        return make_response(jsonify({"error": error}), 400)
+    # a visit is just "I was here"; a review (all three ratings) is optional
+    ratings = None
+    if any(name in request.form for name in RATING_NAMES):
+        ratings, error = check_ratings(request.form)
+        if error:
+            return make_response(jsonify({"error": error}), 400)
     text, error = get_text(request.form, ["note"])
-    if error:                                                
+    if error:
         return make_response(jsonify({"error": error}), 400)
 
     today = date.today().isoformat()
@@ -100,16 +107,17 @@ def add_visit(id):
         "_id": ObjectId(),
         "username": g.user["username"],
         "date": today,
-        "note": text["note"],
-        "ratings": ratings
+        "note": text["note"]
     }
+    if ratings:
+        new_visit["ratings"] = ratings
 
     result = plaques.update_one({"_id": ObjectId(id)}, {"$push": {"visits": new_visit}})
     if result.matched_count == 0:
         return make_response(jsonify({"error": "Plaque not found"}), 404)
 
     new_link = request.host_url + "api/v1.0/plaques/" + id + "/visits/" + str(new_visit["_id"])
-    return make_response(jsonify({"url": new_link}), 201)
+    return make_response(jsonify({"url": new_link, "_id": str(new_visit["_id"])}), 201)
 
 
 @visits_bp.route("/api/v1.0/plaques/<string:id>/visits/<string:vid>", methods=["GET"])
@@ -134,7 +142,7 @@ def get_one_visit(id, vid):
 def edit_visit(id, vid):
     if not ObjectId.is_valid(id) or not ObjectId.is_valid(vid):
         return make_response(jsonify({"error": "Invalid plaque or visit ID"}), 400)
-    error = visit_owner_check(id, vid)
+    visit, error = visit_owner_check(id, vid)
     if error:
         return error
 
@@ -146,7 +154,12 @@ def edit_visit(id, vid):
     if error:
         return make_response(jsonify({"error": error}), 400)
 
-    changes = {"visits.$.ratings." + name: value for name, value in ratings.items()}
+    if len(ratings) == len(RATING_NAMES):
+        changes = {"visits.$.ratings": ratings}           # a full review (also adds one to a plain visit)
+    elif ratings and "ratings" not in visit:
+        return make_response(jsonify({"error": "To review this visit, send all three ratings"}), 400)
+    else:
+        changes = {"visits.$.ratings." + name: value for name, value in ratings.items()}
     if "note" in request.form:
         changes["visits.$.note"] = text["note"]
     if not changes:
@@ -166,7 +179,7 @@ def edit_visit(id, vid):
 def delete_visit(id, vid):
     if not ObjectId.is_valid(id) or not ObjectId.is_valid(vid):
         return make_response(jsonify({"error": "Invalid plaque or visit ID"}), 400)
-    error = visit_owner_check(id, vid)
+    visit, error = visit_owner_check(id, vid)
     if error:
         return error
 
