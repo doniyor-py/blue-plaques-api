@@ -13,6 +13,7 @@ TURNSTILE_SECRET = os.getenv("TURNSTILE_SECRET")          # Cloudflare human che
 EMAIL_MODE = os.getenv("EMAIL_MODE", "console")           # "console" or "smtp"
 SMTP_USER = os.getenv("SMTP_USER")                        # only needed for "smtp"
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")          # optional: only needed for "Continue with Google"
 
 
 if not TURNSTILE_SECRET:
@@ -42,6 +43,7 @@ otps.create_index("expires_at", expireAfterSeconds=0)
 
 users.create_index("username", unique=True)
 users.create_index("email", unique=True)
+users.create_index("google_sub", unique=True, sparse=True)   # only accounts that used Google have one
 blacklist.create_index("token")
 
 plaques.create_index([("location", "2dsphere")])

@@ -1,19 +1,44 @@
-"""Sign-up with email code, password reset, login and logout."""
+"""Sign-up with email code, Google sign-in, password reset, login and logout."""
 import re
+import secrets
 from datetime import datetime, timedelta, timezone
 
 import bcrypt
 import jwt
 from flask import Blueprint, request, make_response, jsonify
 from pymongo.errors import DuplicateKeyError
+from google.oauth2 import id_token
+from google.auth.transport import requests as google_requests
 
-from globals import SECRET_KEY, users, blacklist
+from globals import SECRET_KEY, GOOGLE_CLIENT_ID, users, blacklist
 from decorators import jwt_required
 from extensions import limiter
 from helpers import password_too_long
 from otp import send_email, create_otp, check_otp, is_human
 
 auth_bp = Blueprint("auth_bp", __name__)
+
+
+def issue_token(user):
+    """Our own 30-minute login token, used by both ways of logging in."""
+    return jwt.encode({
+        "username": user["username"],
+        "admin": user.get("admin", False),
+        "iat": datetime.now(timezone.utc),
+        "exp": datetime.now(timezone.utc) + timedelta(minutes=30)
+    }, SECRET_KEY, algorithm="HS256")
+
+
+def username_from_email(email):
+    """Make a free username from the start of an email, e.g. jane.smith@gmail.com -> janesmith."""
+    base = re.sub(r"[^a-z0-9_]", "", email.split("@")[0].lower())[:16]
+    if len(base) < 3:
+        base = (base + "_explorer")[:16]
+    name, number = base, 1
+    while users.find_one({"username": name}):
+        number += 1
+        name = f"{base}{number}"
+    return name
 
 
 @auth_bp.route("/api/v1.0/register", methods=["POST"])
@@ -31,10 +56,9 @@ def register():
         return make_response(jsonify({"error": "A valid email is required"}), 400)
     if len(password) < 8 or password_too_long(password):
         return make_response(jsonify({"error": "password must be 8-72 characters"}), 400)
-
     if accept_terms != "true":
         return make_response(jsonify({"error": "You must accept the terms of use and privacy policy"}), 400)
-    
+
     # 2. are you human? (asks Cloudflare, so only once the input is valid)
     if not is_human(request.form.get("captcha_token")):
         return make_response(jsonify({"error": "Human check failed, please try again"}), 400)
@@ -67,6 +91,7 @@ def register_verify():
     code = request.form.get("code", "").strip()
     if not re.fullmatch(r"\d{6}", code):
         return make_response(jsonify({"error": "code must be 6 digits"}), 400)
+
     saved, error = check_otp(email, "register", code)
     if error:
         return make_response(jsonify({"error": error}), 400)
@@ -93,7 +118,6 @@ def forgot_password():
         send_email(email, "Your Blue Plaques password reset code",
                    f"Your code is {code}. It expires in 10 minutes. "
                    f"If you didn't ask for this, ignore this email.")
-    # same answer either way, so nobody can find out which emails have accounts
     return make_response(jsonify({
         "message": "If that email is registered, we've sent a 6-digit code."
     }), 200)
@@ -104,10 +128,10 @@ def forgot_password():
 def reset_password():
     email = request.form.get("email", "").strip().lower()
     code = request.form.get("code", "").strip()
-    if not re.fullmatch(r"\d{6}", code):
-        return make_response(jsonify({"error": "code must be 6 digits"}), 400)
     new_password = request.form.get("new_password", "")
 
+    if not re.fullmatch(r"\d{6}", code):
+        return make_response(jsonify({"error": "code must be 6 digits"}), 400)
     if len(new_password) < 8 or password_too_long(new_password):
         return make_response(jsonify({"error": "new_password must be 8-72 characters"}), 400)
 
@@ -124,11 +148,10 @@ def reset_password():
 @auth_bp.route("/api/v1.0/login", methods=["GET"])
 @limiter.limit("10 per minute")
 def login():
-    auth = request.authorization        
+    auth = request.authorization
     if not auth or not auth.username or not auth.password:
         return make_response(jsonify({"error": "Username and password required (Basic Auth)"}), 401)
 
-    # people can log in with their email or their username
     identifier = auth.username.strip().lower()
     if "@" in identifier:
         user = users.find_one({"email": identifier})
@@ -138,14 +161,56 @@ def login():
     if (user is None or password_too_long(auth.password)
             or not bcrypt.checkpw(auth.password.encode("utf-8"), user["password"])):
         return make_response(jsonify({"error": "Wrong email, username or password"}), 401)
-    
-    token = jwt.encode({
-        "username": user["username"],
-        "admin": user.get("admin", False),
-        "iat": datetime.now(timezone.utc),
-        "exp": datetime.now(timezone.utc) + timedelta(minutes=30)
-    }, SECRET_KEY, algorithm="HS256")
-    return make_response(jsonify({"token": token}), 200)
+
+    return make_response(jsonify({"token": issue_token(user)}), 200)
+
+
+@auth_bp.route("/api/v1.0/login/google", methods=["POST"])
+@limiter.limit("10 per minute")
+def login_google():
+    if not GOOGLE_CLIENT_ID:
+        return make_response(jsonify({"error": "Google sign-in is not set up on this server"}), 503)
+
+    # 1. ask Google's library to check the ID token: signature, our client ID (aud) and expiry
+    try:
+        info = id_token.verify_oauth2_token(request.form.get("credential", ""),
+                                            google_requests.Request(), GOOGLE_CLIENT_ID)
+    except ValueError:
+        return make_response(jsonify({"error": "Google sign-in failed, please try again"}), 401)
+    if info.get("iss") not in ("accounts.google.com", "https://accounts.google.com"):
+        return make_response(jsonify({"error": "Google sign-in failed, please try again"}), 401)
+    if not info.get("email_verified"):
+        return make_response(jsonify({"error": "Your Google email address is not verified"}), 403)
+
+    google_sub = info["sub"]                       # Google's permanent ID for this person
+    email = info["email"].strip().lower()
+
+    # 2. find the account: by Google ID first, then by email (links an existing account)
+    user = users.find_one({"google_sub": google_sub})
+    if user is None:
+        user = users.find_one({"email": email})
+        if user is not None:
+            users.update_one({"_id": user["_id"]}, {"$set": {"google_sub": google_sub}})
+
+    # 3. no account yet: create one (they agreed to the terms next to the Google button)
+    if user is None:
+        if request.form.get("accept_terms", "").lower() != "true":
+            return make_response(jsonify({"error": "You must accept the terms of use and privacy policy"}), 400)
+        random_password = secrets.token_urlsafe(32)          # nobody knows it; "Forgot password" can set a real one
+        user = {
+            "username": username_from_email(email),
+            "email": email,
+            "password": bcrypt.hashpw(random_password.encode("utf-8"), bcrypt.gensalt()),
+            "google_sub": google_sub,
+            "terms_accepted_at": datetime.now(timezone.utc),
+            "admin": False
+        }
+        try:
+            users.insert_one(user)
+        except DuplicateKeyError:
+            return make_response(jsonify({"error": "Please try again"}), 409)
+
+    return make_response(jsonify({"token": issue_token(user)}), 200)
 
 
 @auth_bp.route("/api/v1.0/logout", methods=["GET"])
