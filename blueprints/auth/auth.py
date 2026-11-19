@@ -141,7 +141,8 @@ def reset_password():
 
     hashed = bcrypt.hashpw(new_password.encode("utf-8"), bcrypt.gensalt())
     users.update_one({"email": email},
-                     {"$set": {"password": hashed, "password_changed_at": datetime.now(timezone.utc)}})
+                     {"$set": {"password": hashed, "password_changed_at": datetime.now(timezone.utc)},
+                      "$unset": {"password_set": ""}})
     return make_response(jsonify({"message": "Password reset, you can now log in"}), 200)
 
 
@@ -200,6 +201,7 @@ def login_google():
         user = {
             "username": username_from_email(email),
             "email": email,
+            "password_set": False,
             "password": bcrypt.hashpw(random_password.encode("utf-8"), bcrypt.gensalt()),
             "google_sub": google_sub,
             "terms_accepted_at": datetime.now(timezone.utc),
