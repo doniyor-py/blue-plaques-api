@@ -13,6 +13,11 @@ from decorators import jwt_required, admin_required
 from helpers import (ALLOWED_COLOURS, ALLOWED_CATEGORIES, check_location, get_text, get_pagination,
                      clean_plaque, delete_photo_file, page_info)
 plaques_bp = Blueprint("plaques_bp", __name__)
+REQUIRED_TEXT = ["inscription", "colour", "organisation", "address", "borough"]
+
+
+def default_title(colour, address):
+    return f"{colour.capitalize()} plaque at {address}"
 
 
 @plaques_bp.route("/api/v1.0/plaques", methods=["GET"])
@@ -55,8 +60,7 @@ def add_plaque():
     if error:
         return make_response(jsonify({"error": error}), 400)
 
-    required = ["inscription", "colour", "organisation", "address", "borough"]
-    missing = [field for field in required if not text[field]]
+    missing = [field for field in REQUIRED_TEXT if not text[field]]
     missing += [field for field in ["erected_year", "lat", "lng"] if not request.form.get(field)]
     if missing:
         return make_response(jsonify({"error": "Missing fields: " + ", ".join(missing)}), 400)
@@ -83,7 +87,7 @@ def add_plaque():
     if error:
         return make_response(jsonify({"error": error}), 400)
     
-    title = text["title"] or f"{colour.capitalize()} plaque at {text['address']}"
+    title = text["title"] or default_title(colour, text["address"])
     category = text["category"].lower() or "other"
 
     category = text["category"].lower() or "other"
@@ -134,15 +138,18 @@ def edit_plaque(id):
                                           "address", "borough", "category"])
     if error:
         return make_response(jsonify({"error": error}), 400)
-    changes = {field: value for field, value in text.items() if value}
+    changes = {field: value for field, value in text.items() if field in request.form}
+    emptied = [field for field in REQUIRED_TEXT if field in changes and not changes[field]]
 
+    if emptied:
+        return make_response(jsonify({"error": "These fields cannot be empty: " + ", ".join(emptied)}), 400)
     if "colour" in changes:
         changes["colour"] = changes["colour"].lower()
         if changes["colour"] not in ALLOWED_COLOURS:
             return make_response(jsonify({"error": "colour must be one of: " + ", ".join(ALLOWED_COLOURS)}), 400)
 
     if "category" in changes:
-        changes["category"] = changes["category"].lower()
+        changes["category"] = changes["category"].lower() or "other"
         if changes["category"] not in ALLOWED_CATEGORIES:
             return make_response(jsonify({"error": "category must be one of: " + ", ".join(ALLOWED_CATEGORIES)}), 400)
 
@@ -170,6 +177,13 @@ def edit_plaque(id):
         changes["borough"] = find_borough(changes["borough"])
         if changes["borough"] is None:
             return make_response(jsonify({"error": "borough must be a London borough, see /api/v1.0/boroughs"}), 400)
+
+    if changes.get("title") == "":
+        current = plaques.find_one({"_id": ObjectId(id)}, {"colour": 1, "address": 1})
+        if current is None:
+            return make_response(jsonify({"error": "Plaque not found"}), 404)
+        changes["title"] = default_title(changes.get("colour", current["colour"]),
+                                         changes.get("address", current["address"]))
 
     if not changes:
         return make_response(jsonify({"error": "No fields to update"}), 400)
