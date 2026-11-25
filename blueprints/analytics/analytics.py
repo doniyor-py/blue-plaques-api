@@ -2,11 +2,13 @@
 from flask import Blueprint, request, make_response, jsonify
 
 from globals import plaques
+from decorators import jwt_required 
 
 analytics_bp = Blueprint("analytics_bp", __name__)
 
 
 @analytics_bp.route("/api/v1.0/analytics/boroughs", methods=["GET"])
+@jwt_required
 def borough_stats():
     pipeline = [
         {"$group": {
@@ -29,6 +31,7 @@ def borough_stats():
 
 
 @analytics_bp.route("/api/v1.0/analytics/ratings", methods=["GET"])
+@jwt_required
 def rating_stats():
     pipeline = [
         {"$unwind": "$visits"},
@@ -58,6 +61,7 @@ def rating_stats():
 
 
 @analytics_bp.route("/api/v1.0/analytics/decades", methods=["GET"])
+@jwt_required
 def decade_stats():
     pipeline = [
         {"$match": {"erected_year": {"$type": "number"}}},
@@ -77,6 +81,7 @@ def decade_stats():
 
 
 @analytics_bp.route("/api/v1.0/analytics/top-rated", methods=["GET"])
+@jwt_required
 def top_rated():
     try:
         min_visits = int(request.args.get("min_visits", 3))
@@ -119,6 +124,7 @@ def top_rated():
 
 
 @analytics_bp.route("/api/v1.0/analytics/professions", methods=["GET"])
+@jwt_required
 def profession_stats():
     pipeline = [
         {"$unwind": "$people"},
@@ -132,6 +138,7 @@ def profession_stats():
 
 
 @analytics_bp.route("/api/v1.0/analytics/ages", methods=["GET"])
+@jwt_required
 def age_stats():
     pipeline = [
         {"$unwind": "$people"},

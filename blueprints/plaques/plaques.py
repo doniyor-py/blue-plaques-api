@@ -14,9 +14,12 @@ from helpers import (ALLOWED_COLOURS, ALLOWED_CATEGORIES, check_location, get_te
                      clean_plaque, delete_photo_file, page_info)
 plaques_bp = Blueprint("plaques_bp", __name__)
 REQUIRED_TEXT = ["inscription", "colour", "organisation", "address", "borough"]
+CLEARABLE = ["title", "category"]
 
 
 def default_title(colour, address):
+    if not address:
+        return f"{colour.capitalize()} plaque"
     return f"{colour.capitalize()} plaque at {address}"
 
 
@@ -93,7 +96,6 @@ def add_plaque():
     title = text["title"] or default_title(colour, text["address"])
     category = text["category"].lower() or "other"
 
-    category = text["category"].lower() or "other"
     if category not in ALLOWED_CATEGORIES:
         return make_response(jsonify({"error": "category must be one of: " + ", ".join(ALLOWED_CATEGORIES)}), 400)
 
@@ -141,11 +143,8 @@ def edit_plaque(id):
                                           "address", "borough", "category"])
     if error:
         return make_response(jsonify({"error": error}), 400)
-    changes = {field: value for field, value in text.items() if field in request.form}
-    emptied = [field for field in REQUIRED_TEXT if field in changes and not changes[field]]
-
-    if emptied:
-        return make_response(jsonify({"error": "These fields cannot be empty: " + ", ".join(emptied)}), 400)
+    changes = {field: value for field, value in text.items()
+               if value or (field in CLEARABLE and field in request.form)}
     if "colour" in changes:
         changes["colour"] = changes["colour"].lower()
         if changes["colour"] not in ALLOWED_COLOURS:
@@ -185,8 +184,8 @@ def edit_plaque(id):
         current = plaques.find_one({"_id": ObjectId(id)}, {"colour": 1, "address": 1})
         if current is None:
             return make_response(jsonify({"error": "Plaque not found"}), 404)
-        changes["title"] = default_title(changes.get("colour", current["colour"]),
-                                         changes.get("address", current["address"]))
+        changes["title"] = default_title(changes.get("colour", current.get("colour", "")),
+                                         changes.get("address", current.get("address")))
 
     if not changes:
         return make_response(jsonify({"error": "No fields to update"}), 400)
@@ -271,7 +270,6 @@ def plaques_nearby():
         {"$limit": limit},
         {"$project": {
             "title": 1, "inscription": 1, "borough": 1, "colour": 1, "location": 1, "views": 1,
-            "inscription": 1, "borough": 1, "colour": 1, "location": 1, "views": 1,
             "distance_m": {"$round": ["$distance_m", 0]},
             "walking_minutes": {"$ceil": {"$divide": ["$distance_m", 80]}}
         }}

@@ -43,8 +43,9 @@ otps.create_index("expires_at", expireAfterSeconds=0)
 
 users.create_index("username", unique=True)
 users.create_index("email", unique=True)
-users.create_index("google_sub", unique=True, sparse=True)   # only accounts that used Google have one
+users.create_index("google_sub", unique=True, sparse=True)
 blacklist.create_index("token")
+blacklist.create_index("expires_at", expireAfterSeconds=0)
 
 plaques.create_index([("location", "2dsphere")])
 plaques.create_index([("views", -1), ("plaque_ref", 1)])
