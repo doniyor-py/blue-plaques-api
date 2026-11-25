@@ -68,19 +68,28 @@ def photo_url(filename):
     return request.host_url + "api/v1.0/photos/" + filename
 
 
+def add_photo_urls(photo):
+    """Full-size url, and a small thumb_url (older photos have no thumbnail, so they use the full one)."""
+    photo["_id"] = str(photo["_id"])
+    photo["url"] = photo_url(photo["filename"])
+    photo["thumb_url"] = photo_url(photo.get("thumb_filename", photo["filename"]))
+    return photo
+
+
 def clean_plaque(plaque):
     plaque["_id"] = str(plaque["_id"])
     for visit in plaque.get("visits", []):
         visit["_id"] = str(visit["_id"])
-    for photo in plaque.get("photos", []):          
-        photo["_id"] = str(photo["_id"]) 
-        photo["url"] = photo_url(photo["filename"]) 
+    for photo in plaque.get("photos", []):
+        add_photo_urls(photo)
     return plaque
 
 
 def delete_photo_file(photo):
-    path = os.path.join(UPLOAD_FOLDER, photo["filename"])
-    try:
-        os.remove(path)
-    except FileNotFoundError:
-        pass
+    """Delete the photo and its thumbnail (older photos have none) from the uploads folder."""
+    for filename in [photo["filename"], photo.get("thumb_filename")]:
+        if filename:
+            try:
+                os.remove(os.path.join(UPLOAD_FOLDER, filename))
+            except FileNotFoundError:
+                pass

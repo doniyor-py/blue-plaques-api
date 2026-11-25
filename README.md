@@ -157,13 +157,13 @@ All routes start with `/api/v1.0` except `/`. **User** means any logged-in accou
 |---|---|---|---|
 | GET | `/` | Public | API information |
 | GET | `/plaques` | Public | All plaques, paginated |
-| GET | `/plaques/<id>` | Public | One plaque (adds 1 to its views) |
+| GET | `/plaques/<id>` | Public | One plaque (adds 1 to its views); its visits and photos come from `/visits` and `/photos` |
 | POST | `/plaques` | Admin | Add a plaque |
 | PUT | `/plaques/<id>` | Admin | Edit a plaque (send only the fields to change) |
 | DELETE | `/plaques/<id>` | Admin | Delete a plaque, its photos, reports and favourites |
 | GET | `/plaques/search` | Public | Search: `q`, `borough`, `colour`, `category`, `from_year`, `to_year`, `alive_in`, `sort` (`ref`, `year`, `views`), `order` |
 | GET | `/plaques/nearby` | Public | `lat`, `lng`, `radius` (metres), `limit`; adds distance and walking minutes |
-| GET | `/plaques/random` | Public | One random plaque; optional `borough` |
+| GET | `/plaques/random` | Public | One random plaque, without its visits and photos; optional `borough` |
 | GET | `/plaques/most-viewed` | Public | Most viewed plaques; `limit` 1–50 |
 | GET | `/boroughs` | Public | The 33 accepted borough names |
 
@@ -271,6 +271,23 @@ To rebuild `plaques.json` from the raw file: `python convert_real_data.py` (add 
 - Uploaded images are re-encoded with Pillow, which removes location data (EXIF/GPS), and are limited in size, pixels and number per plaque.
 - Secrets live in `.env`, which is excluded from Git; `.env.example` contains no real values.
 - Dependencies are pinned in `requirements.txt` and checked with `pip-audit`.
+
+---
+
+## Deploying to production
+
+The settings above are for local development. Before going live:
+
+- Run the API with a production WSGI server such as gunicorn (`gunicorn -w 2 -b 127.0.0.1:8000 app:app`) behind nginx or Caddy, with `FLASK_DEBUG=0`. Never use `python app.py` or debug mode in production.
+- Serve the API and the front end over HTTPS only, with an HSTS header.
+- Use real Cloudflare Turnstile keys (site key in the front end, `TURNSTILE_SECRET` here) and restrict them to your domain in the Cloudflare dashboard.
+- Set `EMAIL_MODE=smtp` with real `SMTP_USER` and `SMTP_PASSWORD` values, so codes are emailed and never printed to the logs.
+- Connect to MongoDB with a dedicated user that has `readWrite` on `plaquesDB` only, read from a `MONGO_URI` environment variable, over TLS on a private network.
+- Store rate limits in Redis instead of memory, and add Werkzeug's `ProxyFix` so limits and links use the client's real IP address and the `https` scheme.
+- Set `FRONTEND_ORIGINS` to the front end's `https://` address so browsers on other sites cannot call the API.
+- Configure a Content-Security-Policy (allowing Google Identity Services, Cloudflare Turnstile and Stadia Maps), HSTS, `X-Content-Type-Options`, `Referrer-Policy` and `Permissions-Policy: geolocation=(self)` on the web server that hosts the Angular site.
+- Never run `create_users.py` on a live database: it deletes every account and creates test accounts with published passwords.
+- Generate a new random `SECRET_KEY` for production and keep it in the host's secret store, not in the repository.
 
 ---
 

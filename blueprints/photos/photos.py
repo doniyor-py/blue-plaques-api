@@ -9,40 +9,51 @@ from PIL import Image, ImageOps, UnidentifiedImageError
 from werkzeug.exceptions import NotFound
 
 from globals import UPLOAD_FOLDER, plaques
-from decorators import jwt_required
+from decorators import jwt_required, current_username
 from extensions import limiter
-from helpers import photo_url, delete_photo_file
+from helpers import add_photo_urls, delete_photo_file
 
 photos_bp = Blueprint("photos_bp", __name__)
 
 
 MAX_PHOTO_SIDE = 1600                  # longest side in pixels after resizing
+THUMB_SIDE = 480                       # longest side of the small version used in the gallery grid
+WEBP_QUALITY = 80
 
 MAX_PHOTOS = 10                         # most photos one plaque can have
 MAX_PIXELS = 40_000_000                 # largest image we accept (width x height)
 Image.MAX_IMAGE_PIXELS = MAX_PIXELS     # Pillow's own safety net
+ONE_YEAR = 365 * 24 * 60 * 60           # seconds
+
+
+def to_webp(img):
+    output = io.BytesIO()
+    img.save(output, "WEBP", quality=WEBP_QUALITY)
+    return output.getvalue()
 
 
 def clean_image(data):
-    """Open the upload with Pillow and return a fresh JPEG with no hidden data, or None."""
+    """Open the upload with Pillow and return (photo, thumbnail) as fresh WebP files
+    with no hidden data, or None."""
     try:
         with Image.open(io.BytesIO(data)) as img:
-            if img.format not in ("JPEG", "MPO", "PNG", "WEBP"):   
+            if img.format not in ("JPEG", "MPO", "PNG", "WEBP"):
                 return None
-            if img.width * img.height > MAX_PIXELS:         
+            if img.width * img.height > MAX_PIXELS:
                 return None
-            img = ImageOps.exif_transpose(img)             
+            img = ImageOps.exif_transpose(img)
             img.thumbnail((MAX_PHOTO_SIDE, MAX_PHOTO_SIDE))
             img = img.convert("RGB")
-            output = io.BytesIO()
-            img.save(output, "JPEG", quality=85)
-            return output.getvalue()
+            photo = to_webp(img)
+            img.thumbnail((THUMB_SIDE, THUMB_SIDE))         # shrink the same image again
+            return photo, to_webp(img)
     except (UnidentifiedImageError, Image.DecompressionBombError, OSError, ValueError):
         return None
 
 
 @photos_bp.route("/api/v1.0/plaques/<string:id>/photos", methods=["POST"])
 @jwt_required
+@limiter.limit("30 per day", key_func=current_username)
 @limiter.limit("10 per minute")
 def add_photo(id):
     if not ObjectId.is_valid(id):
@@ -60,33 +71,32 @@ def add_photo(id):
     cleaned = clean_image(file.read())
     if cleaned is None:
         return make_response(jsonify({"error": "Photo must be a JPG, PNG or WEBP image"}), 400)
+    photo_data, thumb_data = cleaned
 
     caption = request.form.get("caption", "").strip()
     if len(caption) > 200:
         return make_response(jsonify({"error": "caption must be 200 characters or fewer"}), 400)
 
     photo_id = ObjectId()
-    filename = str(photo_id) + ".jpg"
-    path = os.path.join(UPLOAD_FOLDER, filename)
-    with open(path, "wb") as f:
-        f.write(cleaned)
-
     new_photo = {
         "_id": photo_id,
-        "filename": filename,
+        "filename": str(photo_id) + ".webp",
+        "thumb_filename": str(photo_id) + "-thumb.webp",
         "caption": caption,
         "username": g.user["username"],
         "uploaded": date.today().isoformat()
     }
+    for filename, data in [(new_photo["filename"], photo_data), (new_photo["thumb_filename"], thumb_data)]:
+        with open(os.path.join(UPLOAD_FOLDER, filename), "wb") as f:
+            f.write(data)
+
     result = plaques.update_one({"_id": ObjectId(id), f"photos.{MAX_PHOTOS - 1}": {"$exists": False}},
                                 {"$push": {"photos": new_photo}})
     if result.matched_count == 0:
-        os.remove(path)                                          
+        delete_photo_file(new_photo)
         return make_response(jsonify({"error": f"Plaque not found or already has {MAX_PHOTOS} photos"}), 409)
 
-    new_photo["_id"] = str(photo_id)
-    new_photo["url"] = photo_url(filename)
-    return make_response(jsonify(new_photo), 201)
+    return make_response(jsonify(add_photo_urls(new_photo)), 201)
 
 
 @photos_bp.route("/api/v1.0/plaques/<string:id>/photos", methods=["GET"])
@@ -99,18 +109,18 @@ def get_photos(id):
 
     data_to_return = []
     for photo in plaque.get("photos", []):
-        photo["_id"] = str(photo["_id"])
-        photo["url"] = photo_url(photo["filename"])
-        data_to_return.append(photo)
+        data_to_return.append(add_photo_urls(photo))
     return make_response(jsonify(data_to_return), 200)
 
 
 @photos_bp.route("/api/v1.0/photos/<string:filename>", methods=["GET"])
 def show_photo_file(filename):
+    # file names are unique and never reused, so browsers may keep a photo for a year
     try:
-        response = send_from_directory(UPLOAD_FOLDER, filename)
+        response = send_from_directory(UPLOAD_FOLDER, filename, max_age=ONE_YEAR)
     except NotFound:
         return make_response(jsonify({"error": "Photo not found"}), 404)
+    response.cache_control.immutable = True
     response.headers["X-Content-Type-Options"] = "nosniff"
     return response
 

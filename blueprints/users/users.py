@@ -5,8 +5,9 @@ import bcrypt
 from bson import ObjectId
 from flask import Blueprint, request, make_response, jsonify, g
 
-from globals import plaques, users
-from decorators import jwt_required, admin_required, blacklist_token
+from globals import plaques, users, reports
+from decorators import jwt_required, admin_required, blacklist_token, current_username
+from extensions import limiter
 from helpers import password_too_long, get_pagination, delete_photo_file, page_info
 
 users_bp = Blueprint("users_bp", __name__)
@@ -26,6 +27,7 @@ def my_profile():
 
 @users_bp.route("/api/v1.0/users/me/password", methods=["PUT"])
 @jwt_required
+@limiter.limit("5 per 15 minutes", key_func=current_username)
 def change_password():
     old_password = request.form.get("old_password", "")
     new_password = request.form.get("new_password", "")
@@ -51,6 +53,7 @@ def change_password():
 
 @users_bp.route("/api/v1.0/users/me", methods=["DELETE"])
 @jwt_required
+@limiter.limit("5 per 15 minutes", key_func=current_username)
 def delete_my_account():
     user = users.find_one({"username": g.user["username"]})
     if user is None:
@@ -84,12 +87,15 @@ def admin_delete_user(username):
 
 def remove_user_and_data(username):
     users.delete_one({"username": username})
-    plaques.update_many({}, {"$pull": {"visits": {"username": username}}})
-    for plaque in plaques.find({"photos.username": username}, {"photos": 1}):  
-        for photo in plaque["photos"]:                                          
-            if photo["username"] == username:                                   
-                delete_photo_file(photo)                                        
-    plaques.update_many({}, {"$pull": {"photos": {"username": username}}})       
+    # only touch the plaques this user visited or photographed (visits.username is indexed)
+    plaques.update_many({"visits.username": username}, {"$pull": {"visits": {"username": username}}})
+    for plaque in plaques.find({"photos.username": username}, {"photos": 1}):
+        for photo in plaque["photos"]:
+            if photo["username"] == username:
+                delete_photo_file(photo)
+    plaques.update_many({"photos.username": username}, {"$pull": {"photos": {"username": username}}})
+    # admins keep the reports, but no longer see who sent them
+    reports.update_many({"username": username}, {"$set": {"username": "deleted account"}})
 
 
 @users_bp.route("/api/v1.0/users", methods=["GET"])

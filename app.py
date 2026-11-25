@@ -14,7 +14,8 @@ from blueprints.analytics.analytics import analytics_bp
 from blueprints.reports.reports import reports_bp
 
 app = Flask(__name__)
-CORS(app)
+# only our own front end may call the API from a browser
+CORS(app, origins=os.getenv("FRONTEND_ORIGINS", "http://localhost:4200,http://127.0.0.1:4200").split(","))
 limiter.init_app(app)
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -22,6 +23,18 @@ app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024        # 5 MB upload limit
 
 for blueprint in [plaques_bp, visits_bp, photos_bp, auth_bp, users_bp, analytics_bp, reports_bp]:
     app.register_blueprint(blueprint)
+
+
+@app.after_request
+def security_headers(response):
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["Content-Security-Policy"] = "default-src 'none'; frame-ancestors 'none'"
+    response.headers["Referrer-Policy"] = "no-referrer"
+    # answers to logged-in requests and logins hold personal data or a token: never store them
+    if "x-access-token" in request.headers or request.path == "/api/v1.0/login":
+        response.headers["Cache-Control"] = "no-store"
+    return response
 
 
 @app.errorhandler(413)

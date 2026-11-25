@@ -47,6 +47,9 @@ users.create_index("google_sub", unique=True, sparse=True)
 blacklist.create_index("token")
 blacklist.create_index("expires_at", expireAfterSeconds=0)
 
+reports.create_index([("status", 1), ("created", -1)])     # admin list: one status, newest first
+reports.create_index([("plaque_id", 1), ("username", 1)])  # "already reported?" check, and deleting a plaque's reports
+
 plaques.create_index([("location", "2dsphere")])
 plaques.create_index([("views", -1), ("plaque_ref", 1)])
 plaques.create_index("plaque_ref", unique=True)

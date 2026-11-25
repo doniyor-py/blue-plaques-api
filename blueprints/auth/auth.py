@@ -2,6 +2,7 @@
 import re
 import secrets
 from datetime import datetime, timedelta, timezone
+from functools import partial
 
 import bcrypt
 import jwt
@@ -29,16 +30,16 @@ def issue_token(user):
     }, SECRET_KEY, algorithm="HS256")
 
 
-def username_from_email(email):
-    """Make a free username from the start of an email, e.g. jane.smith@gmail.com -> janesmith."""
-    base = re.sub(r"[^a-z0-9_]", "", email.split("@")[0].lower())[:16]
-    if len(base) < 3:
-        base = (base + "_explorer")[:16]
-    name, number = base, 1
-    while users.find_one({"username": name}):
-        number += 1
-        name = f"{base}{number}"
-    return name
+def random_username():
+    """A neutral public name like explorer40517, so it doesn't reveal the email address."""
+    while True:
+        name = f"explorer{secrets.randbelow(100000):05d}"
+        if not users.find_one({"username": name}):
+            return name
+
+
+# checked when the user doesn't exist, so the reply takes as long as for a real account
+DUMMY_HASH = bcrypt.hashpw(b"not-a-real-password", bcrypt.gensalt())
 
 
 def email_in_form():
@@ -61,7 +62,7 @@ def register():
     # 1. check the input (free, so it runs first)
     if not re.fullmatch(r"[a-z0-9_]{3,20}", username):
         return make_response(jsonify({"error": "username must be 3-20 letters, numbers or _"}), 400)
-    if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email):
+    if len(email) > 254 or not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email):
         return make_response(jsonify({"error": "A valid email is required"}), 400)
     if len(password) < 8 or password_too_long(password):
         return make_response(jsonify({"error": "password must be 8-72 characters"}), 400)
@@ -111,6 +112,7 @@ def register_verify():
             "email": email,
             "password": saved["data"]["password"],
             "terms_accepted_at": saved["data"].get("terms_accepted_at"),
+            "created_at": datetime.now(timezone.utc),
             "admin": False             # new accounts are never admins
         })
     except DuplicateKeyError:          # someone took the name while you were checking email
@@ -120,6 +122,7 @@ def register_verify():
 
 @auth_bp.route("/api/v1.0/password/forgot", methods=["POST"])
 @limiter.limit("3 per hour")
+@limiter.limit("3 per hour", key_func=email_in_form)
 def forgot_password():
     email = request.form.get("email", "").strip().lower()
     if users.find_one({"email": email}):
@@ -168,8 +171,10 @@ def login():
     else:
         user = users.find_one({"username": identifier})
 
-    if (user is None or password_too_long(auth.password)
-            or not bcrypt.checkpw(auth.password.encode("utf-8"), user["password"])):
+    stored_hash = user["password"] if user else DUMMY_HASH
+    if (password_too_long(auth.password)
+            or not bcrypt.checkpw(auth.password.encode("utf-8"), stored_hash)
+            or user is None):
         return make_response(jsonify({"error": "Wrong email, username or password"}), 401)
 
     return make_response(jsonify({"token": issue_token(user)}), 200)
@@ -181,10 +186,12 @@ def login_google():
     if not GOOGLE_CLIENT_ID:
         return make_response(jsonify({"error": "Google sign-in is not set up on this server"}), 503)
 
-    # 1. ask Google's library to check the ID token: signature, our client ID (aud) and expiry
+    # 1. ask Google's library to check the ID token: signature, our client ID (aud) and expiry.
+    #    It downloads Google's certificates and would wait up to 120 seconds; 10 is enough.
+    google_request = partial(google_requests.Request(), timeout=10)
     try:
         info = id_token.verify_oauth2_token(request.form.get("credential", ""),
-                                            google_requests.Request(), GOOGLE_CLIENT_ID)
+                                            google_request, GOOGLE_CLIENT_ID)
     except ValueError:
         return make_response(jsonify({"error": "Google sign-in failed, please try again"}), 401)
     if info.get("iss") not in ("accounts.google.com", "https://accounts.google.com"):
@@ -208,12 +215,13 @@ def login_google():
             return make_response(jsonify({"error": "You must accept the terms of use and privacy policy"}), 400)
         random_password = secrets.token_urlsafe(32)          # nobody knows it; "Forgot password" can set a real one
         user = {
-            "username": username_from_email(email),
+            "username": random_username(),
             "email": email,
             "password_set": False,
             "password": bcrypt.hashpw(random_password.encode("utf-8"), bcrypt.gensalt()),
             "google_sub": google_sub,
             "terms_accepted_at": datetime.now(timezone.utc),
+            "created_at": datetime.now(timezone.utc),
             "admin": False
         }
         try:

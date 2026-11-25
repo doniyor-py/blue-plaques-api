@@ -1,5 +1,7 @@
 venv/
 .env
+.env.*
+!.env.example
 .DS_Store
 uploads/
 __pycache__/

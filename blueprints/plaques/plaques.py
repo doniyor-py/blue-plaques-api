@@ -15,6 +15,8 @@ from helpers import (ALLOWED_COLOURS, ALLOWED_CATEGORIES, check_location, get_te
 plaques_bp = Blueprint("plaques_bp", __name__)
 REQUIRED_TEXT = ["inscription", "colour", "organisation", "address", "borough"]
 CLEARABLE = ["title", "category"]
+# visits and photos have their own endpoints, so one plaque is sent without them
+WITHOUT_VISITS_AND_PHOTOS = {"visits": 0, "photos": 0}
 
 
 def default_title(colour, address):
@@ -43,11 +45,12 @@ def show_one_plaque(id):
         return make_response(jsonify({"error": "Invalid plaque ID"}), 400)
 
     if request.args.get("view") == "false":
-        plaque = plaques.find_one({"_id": ObjectId(id)})
+        plaque = plaques.find_one({"_id": ObjectId(id)}, WITHOUT_VISITS_AND_PHOTOS)
     else:
         plaque = plaques.find_one_and_update(
             {"_id": ObjectId(id)},
             {"$inc": {"views": 1}},
+            projection=WITHOUT_VISITS_AND_PHOTOS,
             return_document=ReturnDocument.AFTER
         )
 
@@ -219,11 +222,15 @@ def delete_plaque(id):
 
 @plaques_bp.route("/api/v1.0/boroughs", methods=["GET"])
 def list_boroughs():
-    return make_response(jsonify(LONDON_BOROUGHS), 200)
+    response = make_response(jsonify(LONDON_BOROUGHS), 200)
+    response.headers["Cache-Control"] = "public, max-age=3600"
+    return response
 
 @plaques_bp.route("/api/v1.0/colours", methods=["GET"])
 def list_colours():
-    return make_response(jsonify(ALLOWED_COLOURS), 200)
+    response = make_response(jsonify(ALLOWED_COLOURS), 200)
+    response.headers["Cache-Control"] = "public, max-age=3600"
+    return response
 
 
 @plaques_bp.route("/api/v1.0/plaques/most-viewed", methods=["GET"])
@@ -296,6 +303,7 @@ def random_plaque():
             return make_response(jsonify({"error": "Unknown borough (see /api/v1.0/boroughs)"}), 400)
         pipeline.append({"$match": {"borough": borough}})
     pipeline.append({"$sample": {"size": 1}})
+    pipeline.append({"$project": WITHOUT_VISITS_AND_PHOTOS})
 
     results = list(plaques.aggregate(pipeline))
     if not results:
@@ -314,7 +322,10 @@ def build_search_query(args):
 
     # 1. free text: title, inscription or a person's name
     if args.get("q"):
-        words = re.escape(args["q"].strip())
+        text = args["q"].strip()
+        if len(text) > 100:
+            return None, "q must be 100 characters or fewer"
+        words = re.escape(text)
         query["$or"] = [
             {"title": {"$regex": words, "$options": "i"}},
             {"inscription": {"$regex": words, "$options": "i"}},

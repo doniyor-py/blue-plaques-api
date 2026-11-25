@@ -7,6 +7,7 @@ from email.message import EmailMessage
 import bcrypt
 import requests
 from flask import request
+from pymongo import ReturnDocument
 
 from globals import (EMAIL_MODE, SMTP_USER, SMTP_PASSWORD, TURNSTILE_SECRET, otps)
 
@@ -19,7 +20,7 @@ def send_email(to, subject, body):
         msg["From"] = SMTP_USER
         msg["To"] = to
         msg.set_content(body)
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=10) as server:
             server.login(SMTP_USER, SMTP_PASSWORD)
             server.send_message(msg)
     else:
@@ -47,8 +48,12 @@ def create_otp(email, purpose, data=None):
 
 def check_otp(email, purpose, code):
     """Return (saved_otp, None) if the code is right, otherwise (None, error message)."""
-    saved = otps.find_one({"email": email, "purpose": purpose})
+    # count this try first, in one step, so guesses sent at the same time can't go past 5
+    saved = otps.find_one_and_update({"email": email, "purpose": purpose, "attempts": {"$lt": 5}},
+                                     {"$inc": {"attempts": 1}}, return_document=ReturnDocument.AFTER)
     if saved is None:
+        if otps.find_one_and_delete({"email": email, "purpose": purpose, "attempts": {"$gte": 5}}):
+            return None, "Too many wrong codes - request a new one"
         return None, "No code found - request a new one"
 
     expires = saved["expires_at"]
@@ -59,11 +64,10 @@ def check_otp(email, purpose, code):
         return None, "Code has expired - request a new one"
 
     if not bcrypt.checkpw(code.encode("utf-8"), saved["code"]):
-        tries_left = 4 - saved["attempts"]
+        tries_left = 5 - saved["attempts"]
         if tries_left <= 0:
             otps.delete_one({"_id": saved["_id"]})
             return None, "Too many wrong codes - request a new one"
-        otps.update_one({"_id": saved["_id"]}, {"$inc": {"attempts": 1}})
         return None, f"Wrong code, {tries_left} tries left"
 
     otps.delete_one({"_id": saved["_id"]})                # a code works only once

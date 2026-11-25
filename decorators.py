@@ -15,7 +15,8 @@ def jwt_required(func):
         if not token:
             return make_response(jsonify({"error": "Token is missing"}), 401)
         try:
-            data = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+            data = jwt.decode(token, SECRET_KEY, algorithms=["HS256"],
+                              options={"require": ["exp", "iat", "username"]})
         except jwt.ExpiredSignatureError:
             return make_response(jsonify({"error": "Token has expired, please log in again"}), 401)
         except jwt.InvalidTokenError:
@@ -24,7 +25,7 @@ def jwt_required(func):
             return make_response(jsonify({"error": "Token has been logged out"}), 401)
         g.user = data            # who is logged in, available inside the route
 
-        user = users.find_one({"username": data["username"]}, {"password_changed_at": 1})
+        user = users.find_one({"username": data["username"]}, {"password_changed_at": 1, "created_at": 1})
         if user is None:
             return make_response(jsonify({"error": "Account no longer exists"}), 401)
         changed = user.get("password_changed_at")
@@ -33,6 +34,13 @@ def jwt_required(func):
                 changed = changed.replace(tzinfo=timezone.utc)
             if data.get("iat", 0) < int(changed.timestamp()):
                 return make_response(jsonify({"error": "Password was changed, please log in again"}), 401)
+        # a token from before this account was created belongs to an old, deleted account with the same name
+        created = user.get("created_at")
+        if created:
+            if created.tzinfo is None:
+                created = created.replace(tzinfo=timezone.utc)
+            if data.get("iat", 0) < int(created.timestamp()):
+                return make_response(jsonify({"error": "Account no longer exists"}), 401)
         return func(*args, **kwargs)
     return wrapper
 

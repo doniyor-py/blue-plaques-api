@@ -130,7 +130,7 @@ def get_one_visit(id, vid):
     if plaque is None:
         return make_response(jsonify({"error": "Plaque not found"}), 404)
 
-    for visit in plaque["visits"]:
+    for visit in plaque.get("visits", []):
         if visit["_id"] == ObjectId(vid):
             visit["_id"] = str(visit["_id"])
             return make_response(jsonify(visit), 200)
