@@ -39,11 +39,14 @@ def show_one_plaque(id):
     if not ObjectId.is_valid(id):
         return make_response(jsonify({"error": "Invalid plaque ID"}), 400)
 
-    plaque = plaques.find_one_and_update(
-        {"_id": ObjectId(id)},
-        {"$inc": {"views": 1}},
-        return_document=ReturnDocument.AFTER
-    )
+    if request.args.get("view") == "false":
+        plaque = plaques.find_one({"_id": ObjectId(id)})
+    else:
+        plaque = plaques.find_one_and_update(
+            {"_id": ObjectId(id)},
+            {"$inc": {"views": 1}},
+            return_document=ReturnDocument.AFTER
+        )
 
     if plaque is None:
         return make_response(jsonify({"error": "Plaque not found"}), 404)
