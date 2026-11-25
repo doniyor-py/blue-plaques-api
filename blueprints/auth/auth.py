@@ -41,8 +41,17 @@ def username_from_email(email):
     return name
 
 
+def email_in_form():
+    return request.form.get("email", "").strip().lower()
+
+
+def code_was_sent(response):
+    return response.status_code == 200
+
+
 @auth_bp.route("/api/v1.0/register", methods=["POST"])
-@limiter.limit("5 per hour")
+@limiter.limit("30 per hour")
+@limiter.limit("5 per hour", key_func=email_in_form, deduct_when=code_was_sent)
 def register():
     username = request.form.get("username", "").strip().lower()
     email = request.form.get("email", "").strip().lower()
