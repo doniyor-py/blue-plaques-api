@@ -21,7 +21,7 @@ REPORT_STATUSES = ["open", "in_progress", "resolved"]
 def clean_report(report):
     report["_id"] = str(report["_id"])
     report["plaque_id"] = str(report["plaque_id"])
-    report["created"] = report["created"].isoformat()
+    report["created"] = report["created"].replace(tzinfo=timezone.utc).isoformat()
     return report
 
 

@@ -5,13 +5,13 @@ from datetime import datetime, timedelta, timezone
 
 import bcrypt
 import jwt
-from flask import Blueprint, request, make_response, jsonify
+from flask import Blueprint, request, make_response, jsonify, g
 from pymongo.errors import DuplicateKeyError
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 
-from globals import SECRET_KEY, GOOGLE_CLIENT_ID, users, blacklist
-from decorators import jwt_required
+from globals import SECRET_KEY, GOOGLE_CLIENT_ID, users
+from decorators import jwt_required, blacklist_token
 from extensions import limiter
 from helpers import password_too_long
 from otp import send_email, create_otp, check_otp, is_human
@@ -219,5 +219,5 @@ def login_google():
 @jwt_required
 def logout():
     token = request.headers.get("x-access-token")
-    blacklist.insert_one({"token": token})
+    blacklist_token(token, g.user["exp"])
     return make_response(jsonify({"message": "Logged out"}), 200)

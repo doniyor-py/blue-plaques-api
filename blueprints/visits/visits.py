@@ -29,14 +29,15 @@ def check_ratings(form, partial=False):
     return ratings, None
 
 
-def visit_owner_check(id, vid):
-    """Return (visit, None) if you may change this visit, otherwise (None, error response)."""
+def visit_owner_check(id, vid, allow_admin=False):
+    """Return (visit, None) if you may change this visit, otherwise (None, error response).
+    allow_admin=True lets admins through too (used for deleting, never for editing someone's review)."""
     plaque = plaques.find_one({"_id": ObjectId(id)}, {"visits": 1})
     if plaque is None:
         return None, make_response(jsonify({"error": "Plaque not found"}), 404)
     for visit in plaque.get("visits", []):
         if visit["_id"] == ObjectId(vid):
-            if visit["username"] != g.user["username"] and not g.user.get("admin"):
+            if visit["username"] != g.user["username"] and not (allow_admin and g.user.get("admin")):
                 return None, make_response(jsonify({"error": "You can only change your own visits"}), 403)
             return visit, None
     return None, make_response(jsonify({"error": "Visit not found"}), 404)
@@ -179,7 +180,7 @@ def edit_visit(id, vid):
 def delete_visit(id, vid):
     if not ObjectId.is_valid(id) or not ObjectId.is_valid(vid):
         return make_response(jsonify({"error": "Invalid plaque or visit ID"}), 400)
-    visit, error = visit_owner_check(id, vid)
+    visit, error = visit_owner_check(id, vid, allow_admin=True)
     if error:
         return error
 

@@ -1,5 +1,5 @@
 """Login checks used on protected routes."""
-from datetime import timezone
+from datetime import datetime, timezone
 from functools import wraps
 
 import jwt
@@ -45,6 +45,8 @@ def admin_required(func):
         return func(*args, **kwargs)
     return wrapper
 
+def blacklist_token(token, exp):
+    blacklist.insert_one({"token": token, "expires_at": datetime.fromtimestamp(exp, timezone.utc)})
 
 def current_username():
     """Rate-limit key for logged-in routes: count per account, not per IP address."""

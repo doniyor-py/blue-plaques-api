@@ -5,8 +5,8 @@ import bcrypt
 from bson import ObjectId
 from flask import Blueprint, request, make_response, jsonify, g
 
-from globals import plaques, users, blacklist
-from decorators import jwt_required, admin_required
+from globals import plaques, users
+from decorators import jwt_required, admin_required, blacklist_token
 from helpers import password_too_long, get_pagination, delete_photo_file, page_info
 
 users_bp = Blueprint("users_bp", __name__)
@@ -45,7 +45,7 @@ def change_password():
                      {"$set": {"password": hashed, "password_changed_at": datetime.now(timezone.utc)}})
 
     # log out this token, so the user must log in again with the new password
-    blacklist.insert_one({"token": request.headers.get("x-access-token")})
+    blacklist_token(request.headers.get("x-access-token"), g.user["exp"])
     return make_response(jsonify({"message": "Password changed, please log in again"}), 200)
 
 
@@ -63,7 +63,7 @@ def delete_my_account():
         return make_response(jsonify({"error": "Password is incorrect"}), 401)
 
     remove_user_and_data(user["username"])
-    blacklist.insert_one({"token": request.headers.get("x-access-token")})  
+    blacklist_token(request.headers.get("x-access-token"), g.user["exp"])
     return make_response(jsonify({}), 204)
 
 
