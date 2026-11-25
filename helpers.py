@@ -12,6 +12,21 @@ ALLOWED_COLOURS = [
     "terracotta", "unknown", "white", "wood", "yellow"
 ]
 
+ALLOWED_CATEGORIES = [
+    "literature", "art-design", "film-tv-theatre", "music", "politics-military",
+    "science-medicine", "royalty", "sport", "other"
+]
+
+LONDON_LAT = (51.2, 51.8)
+LONDON_LNG = (-0.6, 0.4)
+
+
+def check_location(lat, lng):
+    if not (LONDON_LAT[0] <= lat <= LONDON_LAT[1]) or not (LONDON_LNG[0] <= lng <= LONDON_LNG[1]):
+        return "The location must be in Greater London: lat 51.2 to 51.8, lng -0.6 to 0.4"
+    return None
+
+
 MAX_PASSWORD_BYTES = 72          
 
 

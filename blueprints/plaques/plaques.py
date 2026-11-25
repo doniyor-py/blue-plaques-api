@@ -10,8 +10,8 @@ from pymongo.errors import DuplicateKeyError
 from boroughs import LONDON_BOROUGHS, find_borough
 from globals import plaques, users, reports
 from decorators import jwt_required, admin_required
-from helpers import ALLOWED_COLOURS, get_text, get_pagination, clean_plaque, delete_photo_file, page_info
-
+from helpers import (ALLOWED_COLOURS, ALLOWED_CATEGORIES, check_location, get_text, get_pagination,
+                     clean_plaque, delete_photo_file, page_info)
 plaques_bp = Blueprint("plaques_bp", __name__)
 
 
@@ -79,11 +79,16 @@ def add_plaque():
     if colour not in ALLOWED_COLOURS:
         return make_response(jsonify({"error": "colour must be one of: " + ", ".join(ALLOWED_COLOURS)}), 400)
     
-    if not (-90 <= lat <= 90) or not (-180 <= lng <= 180):
-        return make_response(jsonify({"error": "lat must be -90 to 90, lng must be -180 to 180"}), 400)
-
+    error = check_location(lat, lng)
+    if error:
+        return make_response(jsonify({"error": error}), 400)
+    
     title = text["title"] or f"{colour.capitalize()} plaque at {text['address']}"
     category = text["category"].lower() or "other"
+
+    category = text["category"].lower() or "other"
+    if category not in ALLOWED_CATEGORIES:
+        return make_response(jsonify({"error": "category must be one of: " + ", ".join(ALLOWED_CATEGORIES)}), 400)
 
     new_plaque = {
         "title": title, 
@@ -138,6 +143,8 @@ def edit_plaque(id):
 
     if "category" in changes:
         changes["category"] = changes["category"].lower()
+        if changes["category"] not in ALLOWED_CATEGORIES:
+            return make_response(jsonify({"error": "category must be one of: " + ", ".join(ALLOWED_CATEGORIES)}), 400)
 
     if request.form.get("erected_year"):
         try:
@@ -154,8 +161,9 @@ def edit_plaque(id):
             lng = float(request.form["lng"])
         except (KeyError, ValueError):
             return make_response(jsonify({"error": "Send both lat and lng as numbers"}), 400)
-        if not (-90 <= lat <= 90) or not (-180 <= lng <= 180):
-            return make_response(jsonify({"error": "lat must be -90 to 90, lng must be -180 to 180"}), 400)
+        error = check_location(lat, lng)
+        if error:
+            return make_response(jsonify({"error": error}), 400)
         changes["location"] = {"type": "Point", "coordinates": [lng, lat]}
 
     if "borough" in changes:
@@ -315,7 +323,11 @@ def build_search_query(args):
 
     # 4. category / categories
     if args.get("category"):
-        query["category"] = {"$in": split_list(args["category"])}
+        categories = split_list(args["category"])
+        bad = [c for c in categories if c not in ALLOWED_CATEGORIES]
+        if bad:
+            return None, "Unknown category: " + ", ".join(bad)
+        query["category"] = {"$in": categories}
 
     # 5. erected between two years
     years = {}
