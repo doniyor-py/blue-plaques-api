@@ -221,6 +221,10 @@ def delete_plaque(id):
 def list_boroughs():
     return make_response(jsonify(LONDON_BOROUGHS), 200)
 
+@plaques_bp.route("/api/v1.0/colours", methods=["GET"])
+def list_colours():
+    return make_response(jsonify(ALLOWED_COLOURS), 200)
+
 
 @plaques_bp.route("/api/v1.0/plaques/most-viewed", methods=["GET"])
 def most_viewed():
