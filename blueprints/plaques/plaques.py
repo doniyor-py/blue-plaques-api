@@ -11,7 +11,7 @@ from boroughs import LONDON_BOROUGHS, find_borough
 from globals import plaques, users, reports
 from decorators import jwt_required, admin_required
 from helpers import (ALLOWED_COLOURS, ALLOWED_CATEGORIES, check_location, get_text, get_pagination,
-                     clean_plaque, delete_photo_file, page_info)
+                     clean_plaque, delete_photo_file, page_info, CARD_SUMMARY, finish_card)
 plaques_bp = Blueprint("plaques_bp", __name__)
 REQUIRED_TEXT = ["inscription", "colour", "organisation", "address", "borough"]
 CLEARABLE = ["title", "category"]
@@ -281,15 +281,16 @@ def plaques_nearby():
         {"$limit": limit},
         {"$project": {
             "title": 1, "inscription": 1, "borough": 1, "colour": 1, "location": 1, "views": 1,
+            "address": 1, "category": 1,
             "distance_m": {"$round": ["$distance_m", 0]},
-            "walking_minutes": {"$ceil": {"$divide": ["$distance_m", 80]}}
+            "walking_minutes": {"$ceil": {"$divide": ["$distance_m", 80]}},
+            **CARD_SUMMARY
         }}
     ]
 
     data_to_return = []
     for plaque in plaques.aggregate(pipeline):
-        plaque["_id"] = str(plaque["_id"])
-        data_to_return.append(plaque)
+        data_to_return.append(finish_card(plaque))
 
     return make_response(jsonify(data_to_return), 200)
 
@@ -406,12 +407,21 @@ def search_plaques():
         return make_response(jsonify({"error": "sort must be one of: " + ", ".join(SORT_OPTIONS)}), 400)
     direction = -1 if request.args.get("order") == "desc" else 1
 
-    fields = {"visits": 0, "photos": 0, "people.life_events": 0}
+    order = {SORT_OPTIONS[sort_by]: direction}
+    if sort_by != "ref":
+        order["plaque_ref"] = 1                  # same order every time for equal values
+    # the card summary is worked out for this page only, then the big arrays are dropped
+    pipeline = [
+        {"$match": query},
+        {"$sort": order},
+        {"$skip": (page - 1) * size},
+        {"$limit": size},
+        {"$addFields": CARD_SUMMARY},
+        {"$project": {"visits": 0, "photos": 0, "people.life_events": 0}}
+    ]
     total = plaques.count_documents(query)
     data_to_return = []
-    for plaque in (plaques.find(query, fields)
-                   .sort([(SORT_OPTIONS[sort_by], direction), ("plaque_ref", 1)])
-                   .skip((page - 1) * size).limit(size)):
-        data_to_return.append(clean_plaque(plaque))
+    for plaque in plaques.aggregate(pipeline):
+        data_to_return.append(finish_card(plaque))
 
     return make_response(jsonify({**page_info(total, page, size), "plaques": data_to_return}), 200)

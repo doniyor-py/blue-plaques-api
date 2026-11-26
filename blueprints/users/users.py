@@ -8,7 +8,7 @@ from flask import Blueprint, request, make_response, jsonify, g
 from globals import plaques, users, reports
 from decorators import jwt_required, admin_required, blacklist_token, current_username
 from extensions import limiter
-from helpers import password_too_long, get_pagination, delete_photo_file, page_info
+from helpers import password_too_long, get_pagination, delete_photo_file, page_info, CARD_SUMMARY, finish_card
 
 users_bp = Blueprint("users_bp", __name__)
 
@@ -133,11 +133,14 @@ def get_favourites():
     user = users.find_one({"username": g.user["username"]}, {"favourites": 1})
     ids = user.get("favourites", []) if user else []
 
+    pipeline = [
+        {"$match": {"_id": {"$in": ids}}},
+        {"$project": {"title": 1, "inscription": 1, "borough": 1, "colour": 1, "location": 1, "views": 1,
+                      "address": 1, "category": 1, **CARD_SUMMARY}}
+    ]
     data_to_return = []
-    for plaque in plaques.find({"_id": {"$in": ids}},
-                               {"title": 1, "inscription": 1, "borough": 1, "colour": 1, "location": 1, "views": 1}):
-        plaque["_id"] = str(plaque["_id"])
-        data_to_return.append(plaque)
+    for plaque in plaques.aggregate(pipeline):
+        data_to_return.append(finish_card(plaque))
     return make_response(jsonify(data_to_return), 200)
 
 

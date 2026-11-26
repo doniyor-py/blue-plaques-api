@@ -85,6 +85,28 @@ def clean_plaque(plaque):
     return plaque
 
 
+# For plaque cards in list responses: the first photo, the average rating and how many reviews,
+# worked out inside the aggregation so the visits and photos arrays never leave the database.
+RATED_VISITS = {"$filter": {"input": {"$ifNull": ["$visits", []]}, "cond": {"$gt": ["$$this.ratings", None]}}}
+CARD_SUMMARY = {
+    "photo_file": {"$let": {
+        "vars": {"first": {"$arrayElemAt": [{"$ifNull": ["$photos", []]}, 0]}},
+        "in": {"$ifNull": ["$$first.thumb_filename", "$$first.filename"]}
+    }},
+    "rating": {"$round": [{"$avg": {"$map": {"input": RATED_VISITS, "in": {"$avg": [
+        "$$this.ratings.history", "$$this.ratings.condition", "$$this.ratings.accessibility"]}}}}, 1]},
+    "review_count": {"$size": RATED_VISITS}
+}
+
+
+def finish_card(plaque):
+    """Turn the photo filename from CARD_SUMMARY into photo_thumb (a full URL, or None)."""
+    plaque["_id"] = str(plaque["_id"])
+    filename = plaque.pop("photo_file", None)
+    plaque["photo_thumb"] = photo_url(filename) if filename else None
+    return plaque
+
+
 def delete_photo_file(photo):
     """Delete the photo and its thumbnail (older photos have none) from the uploads folder."""
     for filename in [photo["filename"], photo.get("thumb_filename")]:

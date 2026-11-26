@@ -29,7 +29,7 @@ UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "upload
 
 # MongoDB connection, collections and indexes
 client = MongoClient("mongodb://localhost:27017")
-db = client.plaquesDB
+db = client[os.getenv("MONGO_DB", "plaquesDB")]          # the tests use plaquesDB_test
 plaques = db.plaques
 users = db.users
 blacklist = db.blacklist
